@@ -1,0 +1,12 @@
+# Chung, dự án đào tạo FinSeed
+# thời gian: ~ 1 tháng
+
+1. Khái quát nhiệm vụ team Frontend:
+    - Đưa ra giải pháp về UI/UX cho Frontend (2 tuần)
+    - Duyệt và tranh luận về quyết định đưa ra của cả team (1-2 ngày, họp team)
+    - Bắt đầu thiết kế Frontend (sẽ bàn luận và chốt sau mục 1 và 2 hoàn thành)
+
+2. Khái quát nhiệm vụ team Backend:
+    - Đưa ra thiết kế cho kết cấu Backend (2-3 ngày, thảo luận online, họp team)
+    - Duyệt và tranh luận về quyết định của team (1-2 ngày, họp team)
+    - Bắt đầu thiết kế Backend (3-4 tuần)

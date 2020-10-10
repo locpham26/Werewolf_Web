@@ -1,0 +1,23 @@
+# Lịch làm việc đợt 1, team Frontend, dự án đào tạo FinSeed
+
+1. Đưa ra giải pháp về UI/UX cho Frontend:
+    Cụ thể: Team Frontend sẽ làm việc trên Figma để vẽ UI cho trang web:
+    
+    Yêu cầu chung:
+        - Đưa ra giải pháp quản lý user (UI)
+            + Đăng nhập / Đăng Xuất, Đăng Ký
+            + Hiển thị profile user
+            + Kết bạn, friend list (không cần hiển thị bạn online)
+            + Matchmaking (join lobby, tìm lobby, etc)
+        - Đưa ra thiết kế cho trò chơi
+            + Thể thức chơi (có thể bàn với cả team Backend)
+            + UI trong game
+            + etc (mở, có thể đưa ra thêm ý tưởng mới)
+
+    Công cụ làm việc chủ yếu: Figma
+        - Tất cả UI sẽ được nộp và kiểm tra qua Figma (có thể thay đổi nếu
+        có giải pháp thay thế được đưa ra và biểu quyết thắng)
+
+2. Duyệt và tranh luận (sẽ tiếp tục sau khi hoàn thành mục 1)
+
+3. Bắt đầu thiết kế Frontend (sẽ tiếp tục sau khi hoàn thành mục 2)
