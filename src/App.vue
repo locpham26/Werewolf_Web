@@ -1,9 +1,7 @@
 <template>
-  <div id="nav">
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
+  <div>
+    <router-view></router-view>
   </div>
-  <!-- <router-view/> -->
 </template>
 
 <style lang="scss">
@@ -15,16 +13,19 @@
   color: #2c3e50;
 }
 
-#nav {
-  padding: 30px;
+body {
+  background: url("./assets/img/werewolf.jpg");
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+}
 
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-
-    &.router-link-exact-active {
-      color: #42b983;
-    }
-  }
+@font-face {
+  font-family: 'Berlin Sans FB Demi Bold';
+  src: url('./assets/fonts/Berlin\ Sans\ FB\ Demi\ Bold.ttf');
+}
+@font-face {
+  font-family: 'Berlin Sans FB Regular';
+  src: url('./assets/fonts/Berlin\ Sans\ FB\ Regular.ttf');
 }
 </style>
