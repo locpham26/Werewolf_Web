@@ -1,0 +1,36 @@
+$dark: #000;
+$light: #fff;
+$red: #ff0000;
+$aqua: #00FFFF;
+$yellow: #FFFF00;
+
+%fl-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+%box {
+  border-radius: 10px;
+  padding: 10px;
+}
+
+
+.box-black {
+  @extend %box;
+  background-color: $dark;
+  color: $light;
+}
+
+.box-gray {
+  @extend %box;
+  background-color: $dark;
+  opacity: 60%;
+  color: $light;
+}
+
+.box-white {
+  @extend %box;
+  background-color: $light;
+  opacity: 60%;
+}
