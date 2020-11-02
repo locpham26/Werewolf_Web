@@ -1,6 +1,5 @@
 <template>
   <div>
-    <h1>Register Page</h1>
     <register-form></register-form>
   </div>
 </template>
@@ -14,9 +13,3 @@ export default {
   },
 };
 </script>
-
-<style lang="scss" scoped>
-h1 {
-  font-family: 'Berlin Sans FB Demi Bold';
-}
-</style>

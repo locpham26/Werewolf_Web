@@ -1,11 +1,14 @@
 <template>
   <div class="box-gray">
     <form-title></form-title>
+    <div class="statement">
+        Forgot your password? Enter your email and we'll send you
+        a link to reset your password.
+    </div>
     <form-input v-for="field in fields" :key="field" :field="field"></form-input>
-    <div class="align-r"><router-link to="/resetPassword">Forgot password?</router-link></div>
-    <form-submit-button buttonName='Play'></form-submit-button>
-    <div class="footer">Don't have an account?
-      <router-link to="/register">Register</router-link>
+    <form-submit-button buttonName='Reset Password'></form-submit-button>
+    <div class="footer">Don't get the email?
+      <span @click="resendEmail">Resend</span>
     </div>
   </div>
 </template>
@@ -18,7 +21,7 @@ import FormSubmitButton from '../form/FormSubmitButton.vue';
 export default {
   data() {
     return {
-      fields: ['Username', 'Password'],
+      fields: ['Email'],
     };
   },
   components: {
@@ -37,21 +40,15 @@ export default {
   padding: 2rem;
 }
 
-.align-r {
-  margin-top: 10px;
+.statement {
   font-family: $font-regular;
-  a {
-  text-decoration: none;
-  color: $white;
-}
 }
 
 .footer {
   font-family: $font-regular;
-  a {
-    text-decoration: none;
+  span {
     font-family: $font-bold;
-    color: $white;
+    cursor: pointer;
   }
 }
 </style>

@@ -1,7 +1,5 @@
 <template>
-  <div>
-    <router-view></router-view>
-  </div>
+  <router-view></router-view>
 </template>
 
 <style lang="scss">
@@ -13,13 +11,31 @@
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+  height: 100%;
+  width: 100%;
+  @extend .fl-center
 }
 
 body {
+  height: 100%;
+  width: 100%;
   background: url("./assets/img/werewolf.jpg");
   background-attachment: fixed;
   background-repeat: no-repeat;
   background-size: 100% 100%;
+}
+
+html {
+  height: 100%;
+  width: 100%;
+}
+
+input {
+  border: none;
+}
+
+input:focus {
+  outline: none;
 }
 
 @font-face {
