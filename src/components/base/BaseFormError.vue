@@ -1,12 +1,12 @@
 <template>
-  <p class="form-error" v-if="!isFormValid">
+  <p class="form-error" v-if="!isValid">
     <slot></slot>
   </p>
 </template>
 
 <script>
 export default {
-  props: ['isFormValid'],
+  props: ['isValid'],
 };
 </script>
 

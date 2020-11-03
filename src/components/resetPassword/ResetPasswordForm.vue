@@ -5,14 +5,14 @@
       Forgot your password? Enter your email and we'll send you
       a link to reset your password.
     </div>
-    <base-input :isValid="email.isValid" :isFormValid="form.isValid">Email
+    <base-form-input
+      :isInputValid="email.isValid"
+      :isFormValid="form.isValid"
+      :errorMessage="email.errorMessage">Email
       <template v-slot:form-input>
         <input type='email' @input="email.isValid=true" v-model.trim="email.value" />
       </template>
-      <template v-slot:error-message>
-        {{email.message}}
-      </template>
-    </base-input>
+    </base-form-input>
     <base-submit-button @click="submitForm">Reset Password</base-submit-button>
     <base-form-footer v-if="showMessage">Don't get the email?
       <template v-slot:click>
@@ -23,7 +23,7 @@
 </template>
 
 <script>
-import BaseInput from '../base/BaseInput.vue';
+import BaseFormInput from '../base/BaseFormInput.vue';
 import BaseFormTitle from '../base/BaseFormTitle.vue';
 import BaseFormFooter from '../base/BaseFormFooter.vue';
 import BaseSubmitButton from '../base/BaseSubmitButton.vue';
@@ -31,7 +31,7 @@ import ResendButton from '../base/ResendButton.vue';
 
 export default {
   components: {
-    BaseInput,
+    BaseFormInput,
     BaseFormTitle,
     BaseFormFooter,
     BaseSubmitButton,
@@ -42,11 +42,11 @@ export default {
       email: {
         value: '',
         isValid: true,
-        message: '',
+        errorMessage: '',
       },
       form: {
         isValid: true,
-        message: '',
+        errorMessage: '',
       },
       showMessage: false,
     };
@@ -55,7 +55,7 @@ export default {
     validateEmail() {
       if (this.email.value === '') {
         this.email.isValid = false;
-        this.email.message = 'Email cannot be empty.';
+        this.email.errorMessage = 'Email cannot be empty.';
       } else {
         this.email.isValid = true;
       }

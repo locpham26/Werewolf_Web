@@ -3,18 +3,23 @@
     <div class="input-label">
       <slot></slot>
     </div>
-    <div class="input-container" :class="{invalid: !isFormValid || !isValid}">
+    <div class="input-container" :class="{invalid: !isFormValid || !isInputValid}">
       <slot name="form-input"></slot>
     </div>
-    <p class="input-error" v-if="!isValid">
-      <slot name="error-message"></slot>
-    </p>
+    <base-form-error :isValid="isInputValid">
+      {{errorMessage}}
+    </base-form-error>
   </div>
 </template>
 
 <script>
+import BaseFormError from './BaseFormError.vue';
+
 export default {
-  props: ['isValid', 'isFormValid'],
+  props: ['isInputValid', 'isFormValid', 'errorMessage'],
+  components: {
+    BaseFormError,
+  },
 };
 </script>
 
@@ -54,13 +59,6 @@ input {
 
 input:focus {
   outline: none;
-}
-
-.input-error {
-  @extend .align-l;
-  font-family: $font-regular;
-  color: $red;
-  margin: 5px;
 }
 
 </style>
