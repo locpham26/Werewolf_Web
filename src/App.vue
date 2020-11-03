@@ -30,14 +30,6 @@ html {
   width: 100%;
 }
 
-input {
-  border: none;
-}
-
-input:focus {
-  outline: none;
-}
-
 @font-face {
   font-family: 'Berlin Sans FB Demi Bold';
   src: url('./assets/fonts/Berlin\ Sans\ FB\ Demi\ Bold.ttf');

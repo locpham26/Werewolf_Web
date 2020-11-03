@@ -1,14 +1,10 @@
 <template>
   <div class="fl-center">
-    <div class="submit-button" type="submit">{{buttonName}}</div>
+    <div class="submit-button">
+      <slot></slot>
+    </div>
   </div>
 </template>
-
-<script>
-export default {
-  props: ['buttonName'],
-};
-</script>
 
 <style lang="scss" scoped>
 @import '@/assets/styles/_base';

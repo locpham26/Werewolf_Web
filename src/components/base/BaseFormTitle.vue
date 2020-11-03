@@ -1,11 +1,13 @@
 <template>
-  <div class="title">WEREWOLF</div>
+  <div class="form-title">
+    <slot></slot>
+  </div>
 </template>
 
 <style lang="scss" scoped>
 @import '@/assets/styles/_base';
 
-.title {
+.form-title {
   font-family: $font-bold;
   font-size: 3rem;
 }
