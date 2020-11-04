@@ -55,10 +55,10 @@ input {
   font-size: 1rem;
   background: none;
   border: none;
-}
-
-input:focus {
-  outline: none;
+  box-sizing: border-box;
+  &:focus {
+    outline: none;
+  }
 }
 
 </style>

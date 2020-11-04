@@ -36,6 +36,11 @@ $font-regular: 'Berlin Sans FB Regular';
   align-items: center;
 }
 
+.fl-space {
+  display: flex;
+  justify-content: space-between;
+}
+
 .box-black {
   @extend %box;
   background-color: $dark;

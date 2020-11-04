@@ -25,15 +25,15 @@
 </template>
 
 <script>
+import validateEmailFormat from '@/utils/validateEmailFormat';
+import validatePasswordFormat from '@/utils/validatePasswordFormat';
+import validateUsernameFormat from '@/utils/validateUsernameFormat';
 import BaseFormInput from '../base/BaseFormInput.vue';
 import BaseFormTitle from '../base/BaseFormTitle.vue';
 import BaseFormFooter from '../base/BaseFormFooter.vue';
 import BaseSubmitButton from '../base/BaseSubmitButton.vue';
 import BaseFormError from '../base/BaseFormError.vue';
 import ResendButton from '../base/ResendButton.vue';
-import validateEmailFormat from '../../utils/validateEmailFormat';
-import validatePasswordFormat from '../../utils/validatePasswordFormat';
-import validateUsernameFormat from '../../utils/validateUsernameFormat';
 
 export default {
   components: {

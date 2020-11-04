@@ -23,12 +23,12 @@
 </template>
 
 <script>
+import validateEmailFormat from '@/utils/validateEmailFormat';
 import BaseFormInput from '../base/BaseFormInput.vue';
 import BaseFormTitle from '../base/BaseFormTitle.vue';
 import BaseFormFooter from '../base/BaseFormFooter.vue';
 import BaseSubmitButton from '../base/BaseSubmitButton.vue';
 import ResendButton from '../base/ResendButton.vue';
-import validateEmailFormat from '../../utils/validateEmailFormat';
 
 export default {
   components: {
