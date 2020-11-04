@@ -28,6 +28,7 @@ import BaseFormTitle from '../base/BaseFormTitle.vue';
 import BaseFormFooter from '../base/BaseFormFooter.vue';
 import BaseSubmitButton from '../base/BaseSubmitButton.vue';
 import ResendButton from '../base/ResendButton.vue';
+import validateEmailFormat from '../../utils/validateEmailFormat';
 
 export default {
   components: {
@@ -53,12 +54,9 @@ export default {
   },
   methods: {
     validateEmail() {
-      if (this.email.value === '') {
-        this.email.isValid = false;
-        this.email.errorMessage = 'Email cannot be empty.';
-      } else {
-        this.email.isValid = true;
-      }
+      const result = validateEmailFormat(this.email.value);
+      this.email.isValid = result.isValid;
+      this.email.errorMessage = result.errorMessage;
     },
     submitForm() {
       this.validateEmail();

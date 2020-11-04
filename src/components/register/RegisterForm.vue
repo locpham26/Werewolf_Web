@@ -31,6 +31,9 @@ import BaseFormFooter from '../base/BaseFormFooter.vue';
 import BaseSubmitButton from '../base/BaseSubmitButton.vue';
 import BaseFormError from '../base/BaseFormError.vue';
 import ResendButton from '../base/ResendButton.vue';
+import validateEmailFormat from '../../utils/validateEmailFormat';
+import validatePasswordFormat from '../../utils/validatePasswordFormat';
+import validateUsernameFormat from '../../utils/validateUsernameFormat';
 
 export default {
   components: {
@@ -49,8 +52,6 @@ export default {
           label: 'Username',
           type: 'text',
           value: '',
-          minLength: 3,
-          maxLength: 12,
           isValid: true,
           errorMessage: '',
         },
@@ -67,8 +68,6 @@ export default {
           label: 'Password',
           type: 'password',
           value: '',
-          minLength: 6,
-          maxLength: 15,
           isValid: true,
           errorMessage: '',
         },
@@ -82,30 +81,19 @@ export default {
   },
   methods: {
     validateUsername() {
-      if (this.fields[0].value.length <= this.fields[0].maxLength
-      && this.fields[0].value.length >= this.fields[0].minLength) {
-        this.fields[0].isValid = true;
-      } else {
-        this.fields[0].isValid = false;
-        this.fields[0].errorMessage = 'Username must be between 3 and 12 characters.';
-      }
-    },
-    validatePassword() {
-      if (this.fields[2].value.length <= this.fields[2].maxLength
-      && this.fields[2].value.length >= this.fields[2].minLength) {
-        this.fields[2].isValid = true;
-      } else {
-        this.fields[2].isValid = false;
-        this.fields[2].errorMessage = 'Password must be between 6 and 15 characters.';
-      }
+      const result = validateUsernameFormat(this.fields[0].value);
+      this.fields[0].isValid = result.isValid;
+      this.fields[0].errorMessage = result.errorMessage;
     },
     validateEmail() {
-      if (this.fields[1].value === '') {
-        this.fields[1].isValid = false;
-        this.fields[1].errorMessage = 'Email cannot be empty.';
-      } else {
-        this.fields[1].isValid = true;
-      }
+      const result = validateEmailFormat(this.fields[1].value);
+      this.fields[1].isValid = result.isValid;
+      this.fields[1].errorMessage = result.errorMessage;
+    },
+    validatePassword() {
+      const result = validatePasswordFormat(this.fields[2].value);
+      this.fields[2].isValid = result.isValid;
+      this.fields[2].errorMessage = result.errorMessage;
     },
     submitForm() {
       this.validateUsername();
