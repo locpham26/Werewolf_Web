@@ -1,10 +1,11 @@
 <template>
   <div class="box-gray">
-    <base-form-title>WEREWOLF</base-form-title>
-    <div class="form-guide">
+    <base-form-header>WEREWOLF
+    <template v-slot:form-guide>
       Forgot your password? Enter your email and we'll send you
       a link to reset your password.
-    </div>
+    </template>
+    </base-form-header>
     <base-form-input
       :isInputValid="email.isValid"
       :isFormValid="form.isValid"
@@ -13,29 +14,29 @@
         <input type='email' @input="email.isValid=true" v-model.trim="email.value" />
       </template>
     </base-form-input>
-    <base-submit-button @click="submitForm">Reset Password</base-submit-button>
-    <base-form-footer v-if="showMessage">Don't get the email?
-      <template v-slot:click>
+    <base-submit-button :submit="submitForm">Reset Password</base-submit-button>
+    <base-form-message v-if="showMessage">
+      <p>Don't get the email?
         <resend-button :email="email.value"></resend-button>
-      </template>
-    </base-form-footer>
+      </p>
+    </base-form-message>
   </div>
 </template>
 
 <script>
 import validateEmailFormat from '@/utils/validateEmailFormat';
 import BaseFormInput from '../base/BaseFormInput.vue';
-import BaseFormTitle from '../base/BaseFormTitle.vue';
-import BaseFormFooter from '../base/BaseFormFooter.vue';
+import BaseFormHeader from '../base/BaseFormHeader.vue';
 import BaseSubmitButton from '../base/BaseSubmitButton.vue';
+import BaseFormMessage from '../base/BaseFormMessage.vue';
 import ResendButton from '../base/ResendButton.vue';
 
 export default {
   components: {
     BaseFormInput,
-    BaseFormTitle,
-    BaseFormFooter,
+    BaseFormHeader,
     BaseSubmitButton,
+    BaseFormMessage,
     ResendButton,
   },
   data() {
@@ -65,7 +66,7 @@ export default {
           console.log(this.email.value);
           this.form.isValid = true;
           this.showMessage = true;
-        }, 1000);
+        }, 6000);
       }
     },
   },
@@ -78,11 +79,16 @@ export default {
 .box-gray {
   width: 25rem;
   padding: 2rem;
+  height: 17rem;
 }
 
 .form-guide {
   font-family: $font-regular;
   margin-top: 5px;
+}
+
+p {
+  @extend .align-c;
 }
 
 </style>

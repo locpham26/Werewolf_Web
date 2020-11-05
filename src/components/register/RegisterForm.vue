@@ -1,6 +1,12 @@
 <template>
   <div class="box-gray">
-    <base-form-title>WEREWOLF</base-form-title>
+    <div v-if="!showMessage">
+    <base-form-header>
+      WEREWOLF
+      <template v-slot:form-guide>
+        Register a new account
+      </template>
+    </base-form-header>
     <base-form-input v-for="field in fields"
       :key="field.name"
       :isFormValid="form.isValid"
@@ -11,16 +17,16 @@
         v-model.trim="field.value" />
       </template>
     </base-form-input>
-    <base-form-error :isFormValid="form.isValid">
-      {{form.message}}
-    </base-form-error>
-    <base-submit-button @click="submitForm">Register</base-submit-button>
-    <base-form-footer v-if="showMessage">User registered successfully.
-    We'll send a confirmation email shortly.
-      <template v-slot:click>
-        <resend-button :email="fields[1].value"></resend-button>
-      </template>
-    </base-form-footer>
+    <base-submit-button class="register-button" :submit="submitForm">Register</base-submit-button>
+    </div>
+    <div v-else>
+    <base-form-message>
+      <p>User registered successfully.</p>
+      <p>We'll send a confirmation email shortly.</p>
+      <p v-if="showRequest">Didn't get the email?
+        <resend-button :email="fields[1].cachedValue"></resend-button></p>
+    </base-form-message>
+    </div>
   </div>
 </template>
 
@@ -29,19 +35,17 @@ import validateEmailFormat from '@/utils/validateEmailFormat';
 import validatePasswordFormat from '@/utils/validatePasswordFormat';
 import validateUsernameFormat from '@/utils/validateUsernameFormat';
 import BaseFormInput from '../base/BaseFormInput.vue';
-import BaseFormTitle from '../base/BaseFormTitle.vue';
-import BaseFormFooter from '../base/BaseFormFooter.vue';
+import BaseFormHeader from '../base/BaseFormHeader.vue';
+import BaseFormMessage from '../base/BaseFormMessage.vue';
 import BaseSubmitButton from '../base/BaseSubmitButton.vue';
-import BaseFormError from '../base/BaseFormError.vue';
 import ResendButton from '../base/ResendButton.vue';
 
 export default {
   components: {
     BaseFormInput,
-    BaseFormTitle,
-    BaseFormFooter,
+    BaseFormHeader,
+    BaseFormMessage,
     BaseSubmitButton,
-    BaseFormError,
     ResendButton,
   },
   data() {
@@ -60,6 +64,7 @@ export default {
           label: 'Email',
           type: 'email',
           value: '',
+          cachedValue: '',
           isValid: true,
           errorMessage: '',
         },
@@ -74,9 +79,9 @@ export default {
       ],
       form: {
         isValid: true,
-        errorMessage: '',
       },
       showMessage: false,
+      showRequest: false,
     };
   },
   methods: {
@@ -95,6 +100,12 @@ export default {
       this.fields[2].isValid = result.isValid;
       this.fields[2].errorMessage = result.errorMessage;
     },
+    resetInput() {
+      this.fields.forEach((field) => {
+        // eslint-disable-next-line no-param-reassign
+        field.value = '';
+      });
+    },
     submitForm() {
       this.validateUsername();
       this.validatePassword();
@@ -103,8 +114,13 @@ export default {
         setTimeout(() => {
           console.log(this.fields[0].value, this.fields[1].value, this.fields[2].value);
           this.form.isValid = true;
+          this.fields[1].cachedValue = this.fields[1].value;
+          this.resetInput();
           this.showMessage = true;
         }, 1000);
+        setTimeout(() => {
+          this.showRequest = true;
+        }, 10000);
       }
     },
   },
@@ -117,6 +133,10 @@ export default {
 .box-gray {
   width: 25rem;
   padding: 2rem;
+}
+
+.register-button {
+  margin-top: 15px;
 }
 
 </style>

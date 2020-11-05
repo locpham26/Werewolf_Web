@@ -1,6 +1,11 @@
 <template>
   <div class="box-gray">
-    <base-form-title>WEREWOLF</base-form-title>
+    <base-form-header>
+      WEREWOLF
+      <template v-slot:form-guide>
+        Sign in with your account
+      </template>
+    </base-form-header>
     <base-form-input v-for="field in fields"
       :key="field.name"
       :isFormValid="form.isValid"
@@ -11,33 +16,28 @@
         v-model.trim="field.value" />
       </template>
     </base-form-input>
-    <base-form-error :isValid="form.isValid">
-      {{form.errorMessage}}
-    </base-form-error>
-    <div class="align-r"><router-link to="/resetPassword">Forgot password?</router-link></div>
-    <base-submit-button @click="submitForm">Play</base-submit-button>
-    <base-form-footer>Don't have an account?
-      <template v-slot:click>
-        <router-link to="/register">Register</router-link>
-      </template>
-    </base-form-footer>
+    <base-submit-button :submit="submitForm">Play</base-submit-button>
+    <div class="fl-space">
+      <span>
+        <router-link to="/register">Create an account</router-link>
+      </span>
+      <span>
+        <router-link to="/resetPassword">Forgot password?</router-link>
+      </span>
+    </div>
   </div>
 </template>
 
 <script>
 import BaseFormInput from '../base/BaseFormInput.vue';
-import BaseFormTitle from '../base/BaseFormTitle.vue';
-import BaseFormFooter from '../base/BaseFormFooter.vue';
+import BaseFormHeader from '../base/BaseFormHeader.vue';
 import BaseSubmitButton from '../base/BaseSubmitButton.vue';
-import BaseFormError from '../base/BaseFormError.vue';
 
 export default {
   components: {
     BaseFormInput,
-    BaseFormTitle,
-    BaseFormFooter,
+    BaseFormHeader,
     BaseSubmitButton,
-    BaseFormError,
   },
   data() {
     return {
@@ -61,7 +61,6 @@ export default {
       ],
       form: {
         isValid: true,
-        errorMessage: '',
       },
     };
   },
@@ -79,11 +78,11 @@ export default {
     submitForm() {
       this.validateUsername();
       this.validatePassword();
-      if (this.fields[1].isValid && this.fields[1].isValid) {
+      if (this.fields[0].isValid && this.fields[1].isValid) {
         setTimeout(() => {
           console.log(this.fields[0].value, this.fields[1].value);
           this.form.isValid = false;
-          this.form.errorMessage = 'Invalid email or password';
+          this.fields[1].errorMessage = 'Invalid email or password';
         }, 1000);
       }
     },
@@ -97,14 +96,20 @@ export default {
 .box-gray {
   width: 25rem;
   padding: 2rem;
+  height: 22rem;
 }
 
-.align-r {
-  margin-top: 10px;
-  font-family: $font-regular;
-  a {
+a {
   text-decoration: none;
+  font-family: $font-regular;
+  font-size: 1rem;
   color: $white;
+  &:hover {
+    background: $light;
+    border-radius: 3px;
+    color: $dark;
+    font-family: $font-bold;
   }
 }
+
 </style>

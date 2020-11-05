@@ -31,11 +31,16 @@ button {
   background: none;
   border: none;
   outline: none;
+  border-radius: 5px;
   color: $white;
   text-align: left;
   font-family: $font-bold;
   font-size: 1rem;
   cursor: pointer;
+  &:hover {
+    background: $light;
+    color: $dark;
+  }
 }
 
 .disable {

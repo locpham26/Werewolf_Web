@@ -1,21 +1,35 @@
 <template>
-  <div class="fl-center">
-    <div class="submit-button">
+  <div>
+    <button @click="submit">
       <slot></slot>
-    </div>
+    </button>
   </div>
 </template>
+
+<script>
+export default {
+  props: ['submit'],
+};
+</script>
 
 <style lang="scss" scoped>
 @import '@/assets/styles/_base';
 
-.submit-button {
-  background: transparent !important;
-  border: none;
+button {
+  background: transparent;
+  border: transparent;
+  border-radius: 5px;
   color: $white;
   font-family: $font-bold;
   font-size: 3rem;
-  margin: 10px 0px;
+  margin-bottom: 10px;
   cursor: pointer;
+  &:hover {
+    background: $light;
+    color: $dark;
+  }
+  &:focus {
+    outline: transparent;
+  }
 }
 </style>

@@ -6,7 +6,7 @@
     <div class="input-container" :class="{invalid: !isFormValid || !isInputValid}">
       <slot name="form-input"></slot>
     </div>
-    <base-form-error :isValid="isInputValid">
+    <base-form-error :isValid="isInputValid && isFormValid">
       {{errorMessage}}
     </base-form-error>
   </div>
@@ -26,10 +26,6 @@ export default {
 <style lang="scss">
 @import '@/assets/styles/_base';
 
-.d-fl {
-  margin-top: 20px;
-}
-
 .input-container {
   @extend .box-white;
   width: 100%;
@@ -37,6 +33,10 @@ export default {
   box-sizing: border-box;
   padding-left: 15px;
   margin-top: 5px;
+  border: 2px solid transparent;
+  &:focus-within {
+    border: 2px solid $aqua;
+  }
 }
 
 .invalid {
