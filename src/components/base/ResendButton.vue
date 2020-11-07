@@ -46,5 +46,7 @@ button {
 .disable {
   opacity: 50%;
   cursor: not-allowed;
+  background: none !important;
+  color: $white !important;
 }
 </style>

@@ -10,14 +10,17 @@
       :isInputValid="email.isValid"
       :isFormValid="form.isValid"
       :errorMessage="email.errorMessage">Email
-      <template v-slot:form-input>
+      <template #form-input>
         <input type='email' @input="email.isValid=true" v-model.trim="email.value" />
       </template>
     </base-form-input>
     <base-submit-button :submit="submitForm">Reset Password</base-submit-button>
-    <base-form-message v-if="showMessage">
+    <base-form-message v-if="emailSent">
+      <p>An email was sent to {{email.value}}.</p>
+    </base-form-message>
+    <base-form-message v-if="emailNotReceived">
       <p>Don't get the email?
-        <resend-button :email="email.value"></resend-button>
+        <resend-button :email="email.cachedValue"></resend-button>
       </p>
     </base-form-message>
   </div>
@@ -43,6 +46,7 @@ export default {
     return {
       email: {
         value: '',
+        cachedValue: '',
         isValid: true,
         errorMessage: '',
       },
@@ -50,7 +54,8 @@ export default {
         isValid: true,
         errorMessage: '',
       },
-      showMessage: false,
+      emailSent: false,
+      emailNotReceived: false,
     };
   },
   methods: {
@@ -63,10 +68,14 @@ export default {
       this.validateEmail();
       if (this.email.isValid) {
         setTimeout(() => {
-          console.log(this.email.value);
           this.form.isValid = true;
-          this.showMessage = true;
-        }, 6000);
+          this.emailSent = true;
+        }, 1000);
+        setTimeout(() => {
+          this.emailSent = false;
+          this.emailNotReceived = true;
+          this.email.value = '';
+        }, 8000);
       }
     },
   },

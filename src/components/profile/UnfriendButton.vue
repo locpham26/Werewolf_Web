@@ -1,9 +1,11 @@
 <template>
   <div>
-    <button @click="$emit('accept', property)">
-      <img src='@/assets/img/check-mark.svg' />
+    <button @click="$emit('unfriend', property)">
+      <img src="@/assets/img/remove-user.svg" />
     </button>
-    <span>Accept</span>
+    <span>
+      Unfriend
+    </span>
   </div>
 </template>
 
@@ -40,7 +42,5 @@ span {
   top: -5px;
   left: 15px;
   visibility: hidden;
-  z-index: 5;
 }
-
 </style>

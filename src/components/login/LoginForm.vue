@@ -6,18 +6,18 @@
         Sign in with your account
       </template>
     </base-form-header>
-    <base-form-input v-for="field in fields"
-      :key="field.name"
+    <base-form-input v-for="(props, field) in fields"
+      :key="field"
       :isFormValid="form.isValid"
-      :isInputValid="field.isValid"
-      :errorMessage="field.errorMessage">{{field.label}}
+      :isInputValid="props.isValid"
+      :errorMessage="props.errorMessage">{{props.label}}
       <template v-slot:form-input>
-        <input :type="field.type" @input="field.isValid=form.isValid=true"
-        v-model.trim="field.value" />
+        <input :type="props.type" @input="props.isValid=form.isValid=true"
+        v-model.trim="props.value" />
       </template>
     </base-form-input>
     <base-submit-button :submit="submitForm">Play</base-submit-button>
-    <div class="fl-space">
+    <div class="fl-between">
       <span>
         <router-link to="/register">Create an account</router-link>
       </span>
@@ -41,24 +41,22 @@ export default {
   },
   data() {
     return {
-      fields: [
-        {
-          name: 'username',
+      fields: {
+        username: {
           label: 'Username',
           type: 'text',
           value: '',
           isValid: true,
           errorMessage: '',
         },
-        {
-          name: 'password',
+        password: {
           label: 'Password',
           type: 'password',
           value: '',
           isValid: true,
           errorMessage: '',
         },
-      ],
+      },
       form: {
         isValid: true,
       },
@@ -66,23 +64,23 @@ export default {
   },
   methods: {
     validateUsername() {
-      this.fields[0].isValid = !(this.fields[0].value === '');
-      this.fields[0].errorMessage = !(this.fields[0].isValid)
+      this.fields.username.isValid = !(this.fields.username.value === '');
+      this.fields.username.errorMessage = !(this.fields.username.isValid)
         ? 'Username cannot be empty.' : '';
     },
     validatePassword() {
-      this.fields[1].isValid = !(this.fields[1].value === '');
-      this.fields[1].errorMessage = !(this.fields[1].isValid)
+      this.fields.password.isValid = !(this.fields.password.value === '');
+      this.fields.password.errorMessage = !(this.fields.password.isValid)
         ? 'Password cannot be empty.' : '';
     },
     submitForm() {
       this.validateUsername();
       this.validatePassword();
-      if (this.fields[0].isValid && this.fields[1].isValid) {
+      if (this.fields.username.isValid && this.fields.password.isValid) {
         setTimeout(() => {
-          console.log(this.fields[0].value, this.fields[1].value);
+          console.log(this.fields.username.value, this.fields.password.value);
           this.form.isValid = false;
-          this.fields[1].errorMessage = 'Invalid email or password';
+          this.fields.password.errorMessage = 'Invalid email or password';
         }, 1000);
       }
     },

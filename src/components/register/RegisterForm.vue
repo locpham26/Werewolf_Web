@@ -7,25 +7,30 @@
         Register a new account
       </template>
     </base-form-header>
-    <base-form-input v-for="field in fields"
-      :key="field.name"
+    <base-form-input v-for="(props, field) in fields"
+      :key="field"
       :isFormValid="form.isValid"
-      :isInputValid="field.isValid"
-      :errorMessage="field.errorMessage">{{field.label}}
+      :isInputValid="props.isValid"
+      :errorMessage="props.errorMessage">{{props.label}}
       <template v-slot:form-input>
-        <input :type="field.type" @input="field.isValid=form.isValid=true"
-        v-model.trim="field.value" />
+        <input :type="props.type" @input="props.isValid=form.isValid=true"
+        v-model.trim="props.value" />
       </template>
     </base-form-input>
     <base-submit-button class="register-button" :submit="submitForm">Register</base-submit-button>
     </div>
-    <div v-else>
-    <base-form-message>
-      <p>User registered successfully.</p>
-      <p>We'll send a confirmation email shortly.</p>
-      <p v-if="showRequest">Didn't get the email?
-        <resend-button :email="fields[1].cachedValue"></resend-button></p>
-    </base-form-message>
+    <div class="confirm-request" v-else>
+      <base-form-message>
+        <p>User registered successfully.</p>
+        <p>We'll send a confirmation email shortly.</p>
+        <p v-if="showRequest">Didn't get the email?
+          <resend-button :email="fields.email.cachedValue"></resend-button>
+        </p>
+      </base-form-message>
+      <div class="img-container">
+        <img src='@/assets/img/left-arrow.svg' v-if="showRequest"
+        @click="showMessage=showRequest=false" />
+      </div>
     </div>
   </div>
 </template>
@@ -50,17 +55,15 @@ export default {
   },
   data() {
     return {
-      fields: [
-        {
-          name: 'username',
+      fields: {
+        username: {
           label: 'Username',
           type: 'text',
           value: '',
           isValid: true,
           errorMessage: '',
         },
-        {
-          name: 'email',
+        email: {
           label: 'Email',
           type: 'email',
           value: '',
@@ -68,15 +71,14 @@ export default {
           isValid: true,
           errorMessage: '',
         },
-        {
-          name: 'password',
+        password: {
           label: 'Password',
           type: 'password',
           value: '',
           isValid: true,
           errorMessage: '',
         },
-      ],
+      },
       form: {
         isValid: true,
       },
@@ -86,41 +88,42 @@ export default {
   },
   methods: {
     validateUsername() {
-      const result = validateUsernameFormat(this.fields[0].value);
-      this.fields[0].isValid = result.isValid;
-      this.fields[0].errorMessage = result.errorMessage;
+      const result = validateUsernameFormat(this.fields.username.value);
+      this.fields.username.isValid = result.isValid;
+      this.fields.username.errorMessage = result.errorMessage;
     },
     validateEmail() {
-      const result = validateEmailFormat(this.fields[1].value);
-      this.fields[1].isValid = result.isValid;
-      this.fields[1].errorMessage = result.errorMessage;
+      const result = validateEmailFormat(this.fields.email.value);
+      this.fields.email.isValid = result.isValid;
+      this.fields.email.errorMessage = result.errorMessage;
     },
     validatePassword() {
-      const result = validatePasswordFormat(this.fields[2].value);
-      this.fields[2].isValid = result.isValid;
-      this.fields[2].errorMessage = result.errorMessage;
+      const result = validatePasswordFormat(this.fields.password.value);
+      this.fields.password.isValid = result.isValid;
+      this.fields.password.errorMessage = result.errorMessage;
     },
     resetInput() {
-      this.fields.forEach((field) => {
-        // eslint-disable-next-line no-param-reassign
-        field.value = '';
-      });
+      this.fields.username.value = '';
+      this.fields.email.value = '';
+      this.fields.password.value = '';
     },
     submitForm() {
       this.validateUsername();
       this.validatePassword();
       this.validateEmail();
-      if (this.fields[0].isValid && this.fields[1].isValid && this.fields[2].isValid) {
+      if (this.fields.username.isValid && this.fields.email.isValid
+      && this.fields.password.isValid) {
         setTimeout(() => {
-          console.log(this.fields[0].value, this.fields[1].value, this.fields[2].value);
+          console.log(this.fields.username.value, this.fields.email.value,
+            this.fields.password.value);
           this.form.isValid = true;
-          this.fields[1].cachedValue = this.fields[1].value;
+          this.fields.email.cachedValue = this.fields.email.value;
           this.resetInput();
           this.showMessage = true;
         }, 1000);
         setTimeout(() => {
           this.showRequest = true;
-        }, 10000);
+        }, 6000);
       }
     },
   },
@@ -137,6 +140,19 @@ export default {
 
 .register-button {
   margin-top: 15px;
+}
+
+.confirm-request {
+  height: 6rem;
+}
+
+.img-container {
+  display: flex;
+  justify-content: left;
+  margin-top: 20px;
+  img {
+    cursor: pointer;
+  }
 }
 
 </style>
