@@ -1,15 +1,15 @@
 <template>
   <div>
-    <button @click="$emit('accept', property)">
-      <img src='@/assets/img/check-mark.svg' />
+    <button @click="$emit(buttonEvent, property)">
+      <slot></slot>
     </button>
-    <span>Accept</span>
+    <span>{{buttonEvent}}</span>
   </div>
 </template>
 
 <script>
 export default {
-  props: ['property'],
+  props: ['property', 'buttonEvent'],
 };
 </script>
 
@@ -41,6 +41,7 @@ span {
   left: 15px;
   visibility: hidden;
   z-index: 5;
+  text-transform: capitalize;
 }
 
 </style>

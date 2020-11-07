@@ -15,11 +15,6 @@
       <button @click="saveEditing" class="apply-button">Apply</button>
       <button @click="cancelEditing" class="cancel-button">Cancel</button>
     </div>
-    <div>
-      {{myInfo.username.pendingVal}}
-      {{myInfo.email.pendingVal}}
-      {{myInfo.password.pendingVal}}
-    </div>
   </div>
 </template>
 
@@ -78,7 +73,7 @@ export default {
 .field-container {
   display: flex;
   flex-direction: row;
-  margin-top: 10px;
+  margin-top: 15px;
 }
 
 input {

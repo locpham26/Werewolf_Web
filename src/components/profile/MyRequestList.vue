@@ -6,10 +6,14 @@
       </div>
       <div class="fl-around">
         <span>
-          <accept-button :property="request.id" @accept='acceptRequest'></accept-button>
+          <base-button :property="request.id" buttonEvent="accept" @accept='acceptRequest'>
+            <img src='@/assets/img/check-mark.svg' />
+          </base-button>
         </span>
         <span>
-          <decline-button :property="request.id" @decline='declineRequest'></decline-button>
+          <base-button :property="request.id" buttonEvent="decline" @decline='declineRequest'>
+            <img src="@/assets/img/close.svg" />
+          </base-button>
         </span>
       </div>
     </div>
@@ -17,14 +21,12 @@
 </template>
 
 <script>
-import AcceptButton from './AcceptButton.vue';
-import DeclineButton from './DeclineButton.vue';
+import BaseButton from './BaseButton.vue';
 import ListContainer from './ListContainer.vue';
 
 export default {
   components: {
-    AcceptButton,
-    DeclineButton,
+    BaseButton,
     ListContainer,
   },
   data() {

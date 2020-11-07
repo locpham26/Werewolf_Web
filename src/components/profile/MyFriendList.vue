@@ -3,19 +3,21 @@
     <div class="fl-between" v-for="friend in myFriends" :key="friend.name">
       <span>{{friend.name}}</span>
       <span>
-        <unfriend-button :property="friend.name" @unfriend='deleteFriend'></unfriend-button>
+        <base-button :property="friend.name" buttonEvent="unfriend" @unfriend='deleteFriend'>
+          <img src="@/assets/img/remove-user.svg" />
+        </base-button>
       </span>
     </div>
   </list-container>
 </template>
 
 <script>
-import UnfriendButton from './UnfriendButton.vue';
+import BaseButton from './BaseButton.vue';
 import ListContainer from './ListContainer.vue';
 
 export default {
   components: {
-    UnfriendButton,
+    BaseButton,
     ListContainer,
   },
   data() {
