@@ -20,33 +20,14 @@ export default {
     BaseButton,
     ListContainer,
   },
-  data() {
-    return {
-      myFriends: [
-        { name: '16Typh' },
-        { name: 'ThanhDraw' },
-        { name: 'GDucky' },
-        { name: 'Tez' },
-        { name: 'MCK' },
-        { name: 'RIC' },
-        { name: 'YunoBigboy' },
-        { name: 'Gil' },
-        { name: 'Yang' },
-        { name: 'AK49' },
-        { name: 'RTee' },
-        { name: 'HanhOr' },
-        { name: 'Gonzo' },
-        { name: 'FFF' },
-        { name: 'DuyAndy' },
-        { name: 'MacJunior' },
-        { name: 'LilCell' },
-        { name: 'LOR' },
-      ],
-    };
+  computed: {
+    myFriends() {
+      return this.$store.getters['friendInfo/getFriendList'];
+    },
   },
   methods: {
     deleteFriend(friendName) {
-      this.myFriends = this.myFriends.filter((friend) => friend.name !== friendName);
+      this.$store.dispatch('friendInfo/removeFriend', { friendName });
       this.$emit('unfriend', `${friendName} was removed from your friend list.`);
     },
   },

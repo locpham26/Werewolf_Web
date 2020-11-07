@@ -1,12 +1,8 @@
 import { createStore } from 'vuex';
+import friendInfoModule from './modules/friendInfo';
 
 export default createStore({
-  state: {
-  },
-  mutations: {
-  },
-  actions: {
-  },
   modules: {
+    friendInfo: friendInfoModule,
   },
 });

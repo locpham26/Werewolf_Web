@@ -55,6 +55,7 @@ export default {
       const acceptedRequest = this.myRequests.find((request) => request.id === requestId);
       this.myRequests = this.myRequests.filter((request) => request.id !== requestId);
       this.$emit('accept', `You and ${acceptedRequest.from} are now friends.`);
+      this.$store.dispatch('friendInfo/acceptFriendRequest', { friendName: acceptedRequest.from });
     },
   },
 };
