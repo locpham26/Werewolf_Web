@@ -11,6 +11,7 @@
       <div v-if="isGameStarted" class="fl-center">
         <div class="box-gray">{{ countdown }}s</div>
         <p>{{ night }}</p>
+        <p>{{ gameTurn }}</p>
       </div>
       <div v-if="isGameStarted" class="box-gray">{{ monitorMessage }}</div>
       <div v-if="!isGameStarted" class="box-gray d-fl">
@@ -60,7 +61,9 @@ export default {
   },
   watch: {
     gameTurn(turn) {
-      if (turn === 'villager') {
+      if (turn === 'gameStart') {
+        this.monitorMessage = 'The game has started. You have been assigned a role. The first night will come in...';
+      } else if (turn === 'villager') {
         this.monitorMessage = 'It\'s villagers\' turn. Discuss with other and vote someone to be hanged.';
       } else if (turn === 'guard') {
         this.monitorMessage = 'It\'s guard\'s turn. Protect someone.';
@@ -68,15 +71,26 @@ export default {
         this.monitorMessage = 'It\'s wolf\'s turn. Discuss with other wolvers and kill someone.';
       } else if (turn === 'seer') {
         this.monitorMessage = 'It\'s seer\'s turn. Want to check someone?.';
+      } else if (turn === 'dayEnd') {
+        this.monitorMessage = 'No one was hanged.';
+      } else if (turn === 'dayStart') {
+        this.monitorMessage = 'Last night. No one was killed.';
       }
     },
   },
   mounted() {
-    this.$store.getters['socket/getUserSocket'].on('eliminate', (eliminatedPlayer) => {
-      if (this.userInfo.name === eliminatedPlayer) {
+    this.$store.getters['socket/getUserSocket'].on('hang', (hangedPlayer) => {
+      if (this.userInfo.name === hangedPlayer.name) {
         this.monitorMessage = 'You were hanged.';
       } else {
-        this.monitorMessage = `${eliminatedPlayer} was hanged.`;
+        this.monitorMessage = `${hangedPlayer.name} was hanged. ${hangedPlayer.name} was ${hangedPlayer.role}.`;
+      }
+    });
+    this.$store.getters['socket/getUserSocket'].on('kill', (killedPlayer) => {
+      if (this.userInfo.name === killedPlayer.name) {
+        this.monitorMessage = 'You were killed.';
+      } else {
+        this.monitorMessage = `${killedPlayer.name} was killed. ${killedPlayer.name} was ${killedPlayer.role}.`;
       }
     });
   },
