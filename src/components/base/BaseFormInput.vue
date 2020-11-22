@@ -1,5 +1,5 @@
 <template>
-  <div class="d-fl">
+  <div class="d-fl-col">
     <div class="input-label">
       <slot></slot>
     </div>
@@ -48,6 +48,14 @@ export default {
   font-family: $font-bold;
 }
 
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  background: $light !important;
+  font-family: $font-regular;
+}
+
 input {
   width: 100%;
   height: 100%;
@@ -56,9 +64,6 @@ input {
   background: none;
   border: none;
   box-sizing: border-box;
-  &:focus {
-    outline: none;
-  }
 }
 
 </style>

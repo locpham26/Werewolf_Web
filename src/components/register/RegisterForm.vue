@@ -135,6 +135,7 @@ export default {
 
 .box-gray {
   width: 25rem;
+  height: 28rem;
   padding: 2rem;
 }
 

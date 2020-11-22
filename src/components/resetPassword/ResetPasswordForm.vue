@@ -97,7 +97,7 @@ export default {
 }
 
 p {
-  @extend .align-c;
+  @extend .align-ct;
 }
 
 </style>

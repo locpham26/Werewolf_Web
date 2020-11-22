@@ -1,5 +1,6 @@
-$dark: rgba(0, 0, 0, 1);
-$light: rgba(255,255,255,0.6);
+$black: rgba(0, 0, 0, 1);
+$dark: rgba(0, 0, 0, 0.7);
+$light: rgba(255, 255, 255, 0.6);
 $white: rgba(255, 255, 255, 1);
 $gray: rgba(0,0,0,0.6);
 $red: rgba(255, 0, 0, 1);
@@ -13,19 +14,27 @@ $font-regular: 'Berlin Sans FB Regular';
   padding: 10px;
 }
 
+.bold {
+  font-family: $font-bold;
+}
+
 .align-l {
   text-align: left;
+}
+
+.align-ct {
+  text-align: center;
 }
 
 .align-r {
   text-align: right;
 }
 
-.align-c {
-  text-align: center;
+.d-fl {
+  display: flex
 }
 
-.d-fl {
+.d-fl-col {
   display: flex;
   flex-direction: column;
 }
@@ -48,8 +57,14 @@ $font-regular: 'Berlin Sans FB Regular';
 
 .box-black {
   @extend %box;
+  background-color: $black;
+  color: $white;
+}
+
+.box-dark {
+  @extend %box;
   background-color: $dark;
-  color: $light;
+  color: $white;
 }
 
 .box-gray {
@@ -61,5 +76,5 @@ $font-regular: 'Berlin Sans FB Regular';
 .box-white {
   @extend %box;
   background-color: $light;
-  color: $dark;
+  color: $black;
 }

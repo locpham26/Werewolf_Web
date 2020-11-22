@@ -73,15 +73,20 @@ export default {
       this.fields.password.errorMessage = !(this.fields.password.isValid)
         ? 'Password cannot be empty.' : '';
     },
-    submitForm() {
+    async submitForm() {
       this.validateUsername();
       this.validatePassword();
       if (this.fields.username.isValid && this.fields.password.isValid) {
-        setTimeout(() => {
-          console.log(this.fields.username.value, this.fields.password.value);
+        try {
+          await this.$store.dispatch('auth/login', {
+            name: this.fields.username.value,
+            password: this.fields.password.value,
+          });
+          this.$router.push('/homepage');
+        } catch (exception) {
           this.form.isValid = false;
-          this.fields.password.errorMessage = 'Invalid email or password';
-        }, 1000);
+          this.fields.password.errorMessage = exception.response.data;
+        }
       }
     },
   },

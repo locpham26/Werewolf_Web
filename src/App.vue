@@ -4,9 +4,9 @@
 
 <style lang="scss">
 @import '@/assets/styles/_base';
+@import '@/assets/styles/_mixin';
 
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
@@ -18,16 +18,29 @@
 
 body {
   height: 100%;
-  width: 100%;
   background: url("./assets/img/werewolf.jpg");
   background-attachment: fixed;
   background-repeat: no-repeat;
   background-size: 100% 100%;
+  font-family: $font-regular;
+  margin: 0;
 }
 
 html {
   height: 100%;
   width: 100%;
+}
+
+button {
+  border: none;
+  cursor: pointer;
+  font-family: $font-bold;
+  font-size: 1rem;
+  @include transition(0.2s);
+}
+
+button:focus, input:focus {
+  outline: none;
 }
 
 @font-face {

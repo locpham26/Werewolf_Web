@@ -41,10 +41,15 @@ const routes = [
     name: 'playroom',
     component: PlayRoom,
   },
+  {
+    path: '/playroom/:id',
+    component: PlayRoom,
+    meta: { requiresAuth: true },
+  },
 ];
 
 const router = createRouter({
-  history: createWebHistory(process.env.BASE_URL),
+  history: createWebHistory(),
   routes,
 });
 

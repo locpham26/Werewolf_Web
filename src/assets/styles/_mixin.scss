@@ -1,0 +1,14 @@
+@mixin transition($property...) {
+  transition: $property;
+  -moz-transition: $property;
+  -o-transition: $property;
+  -webkit-transition: $property;
+}
+
+@mixin transform($property...) {
+  transform: $property;
+  -moz-transform: $property;
+  -ms-transform: $property;
+  -o-transform: $property;
+  -webkit-transform: $property;
+}
