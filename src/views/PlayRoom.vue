@@ -15,7 +15,7 @@
     </div>
     <div class="left-panel" v-if="!gameInfo.started"><PlayRoomFriendList /></div>
     <PlayRoomPlayerList :players="gameInfo.players" :userInfo="userInfo"
-    :selectable="pendingAction.type !== '' && pendingAction.target === '' "
+    :selectable="selectable" :gameTurn="gameInfo.turn"
     :isDay="gameInfo.started && gameInfo.turn === 'dayStart' || gameInfo.turn ==='villager'" />
     <PlayRoomChatbox
       :isGameStarted="gameInfo.started"
@@ -70,6 +70,9 @@ export default {
         return this.userInfo.name === this.gameInfo.players[0].name;
       }
       return false;
+    },
+    selectable() {
+      return this.pendingAction.type !== '' && this.pendingAction.target === '';
     },
   },
   watch: {

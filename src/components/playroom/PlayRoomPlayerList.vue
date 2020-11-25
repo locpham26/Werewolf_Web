@@ -9,6 +9,7 @@
         :isWolf="player.role === 'wolf' && userInfo.role === 'wolf'"
         :selectable="selectable"
         :visibleVote="visibleVote"
+        :checkingRole="checkingRole"
         :isDead="!player.isAlive" />
   </div>
 </template>
@@ -18,7 +19,7 @@ import PlayRoomPlayerListItem from './PlayRoomPlayerListItem';
 
 export default {
   name: 'PlayRoomPlayerList',
-  props: ['players', 'userInfo', 'selectable', 'isDay'],
+  props: ['players', 'userInfo', 'selectable', 'isDay', 'gameTurn'],
   components: { PlayRoomPlayerListItem },
   data() {
     return {
@@ -46,6 +47,9 @@ export default {
   computed: {
     visibleVote() {
       return this.isDay || this.userInfo.role === 'wolf';
+    },
+    checkingRole() {
+      return this.userInfo.role === 'seer' && this.gameTurn === 'seer';
     },
   },
 };

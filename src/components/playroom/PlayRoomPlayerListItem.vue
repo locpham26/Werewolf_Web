@@ -10,6 +10,7 @@
           :src="require('@/assets/img/' + player + '.png')"
           v-show="visibleVote" />
         </div>
+        <div v-show="checkingRole">{{checkWolf}}</div>
       </div>
     </div>
   </div>
@@ -18,8 +19,33 @@
 <script>
 export default {
   name: 'PlayRoomPlayerListItem',
-  props: ['avatar', 'name', 'votes', 'isMe', 'isWolf', 'selectable', 'visibleVote', 'isDead'],
+  props: ['avatar', 'name', 'votes', 'isMe', 'isWolf', 'selectable', 'visibleVote', 'isDead', 'checkingRole'],
   inject: ['selectTarget'],
+  data() {
+    return {
+      checkWolf: '',
+    };
+  },
+  watch: {
+    checkWolf(value) {
+      if (value !== '') {
+        setTimeout(() => {
+          this.checkWolf = '';
+        }, 2000);
+      }
+    },
+  },
+  mounted() {
+    this.$store.getters['socket/getUserSocket'].on('reveal', (isWolf) => {
+      console.log('reveal');
+      console.log(isWolf);
+      if (isWolf) {
+        this.checkWolf = 'This is a wolf';
+      } else {
+        this.checkWolf = 'Not a wolf';
+      }
+    });
+  },
 };
 </script>
 
