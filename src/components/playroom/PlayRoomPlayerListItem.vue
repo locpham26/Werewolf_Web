@@ -1,13 +1,14 @@
 <template>
   <div class="box-dark d-fl" @click="selectTarget(name)"
-  :class="{'selectable': selectable}">
+  :class="{'selectable': selectable, 'is-dead': isDead}">
     <img :src="require('@/assets/img/' + avatar + '.png')" />
     <div class="player-info">
       <div :class="{'align-l': true, wolf: isWolf, me: isMe}">{{ name }}</div>
       <div class="vote-container d-fl">
         <div v-for="player in votes" :key="name + '-' + player">
           <img class="vote-avatar"
-          :src="require('@/assets/img/' + player + '.png')" />
+          :src="require('@/assets/img/' + player + '.png')"
+          v-show="visibleVote" />
         </div>
       </div>
     </div>
@@ -17,7 +18,7 @@
 <script>
 export default {
   name: 'PlayRoomPlayerListItem',
-  props: ['avatar', 'name', 'votes', 'isMe', 'isWolf', 'selectable'],
+  props: ['avatar', 'name', 'votes', 'isMe', 'isWolf', 'selectable', 'visibleVote', 'isDead'],
   inject: ['selectTarget'],
 };
 </script>
@@ -67,5 +68,12 @@ export default {
 
 .me {
   color: $aqua !important;
+}
+
+.is-dead {
+  background-color: $light !important;
+  &:hover {
+    cursor: not-allowed !important;
+}
 }
 </style>

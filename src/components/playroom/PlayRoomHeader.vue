@@ -62,19 +62,21 @@ export default {
   watch: {
     gameTurn(turn) {
       if (turn === 'gameStart') {
-        this.monitorMessage = 'The game has started. You have been assigned a role. The first night will come in...';
+        this.monitorMessage = 'The game has started. You have been assigned a role. The first night will come soon. Be prepared.';
       } else if (turn === 'villager') {
         this.monitorMessage = 'It\'s villagers\' turn. Discuss with other and vote someone to be hanged.';
       } else if (turn === 'guard') {
-        this.monitorMessage = 'It\'s guard\'s turn. Protect someone.';
+        this.monitorMessage = 'Wake up guard. Protect someone.';
       } else if (turn === 'wolf') {
-        this.monitorMessage = 'It\'s wolf\'s turn. Discuss with other wolvers and kill someone.';
+        this.monitorMessage = 'Wake up wolves. Discuss with other wolves and kill someone.';
       } else if (turn === 'seer') {
-        this.monitorMessage = 'It\'s seer\'s turn. Want to check someone?.';
+        this.monitorMessage = 'Wake up seer. Want to check someone?';
       } else if (turn === 'dayEnd') {
-        this.monitorMessage = 'No one was hanged.';
+        this.monitorMessage = 'No one was hanged today.';
       } else if (turn === 'dayStart') {
-        this.monitorMessage = 'Last night. No one was killed.';
+        this.monitorMessage = 'Last night, no one was killed.';
+      } else if (turn === 'nightStart') {
+        this.monitorMessage = 'The night has come.';
       }
     },
   },

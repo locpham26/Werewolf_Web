@@ -3,8 +3,8 @@
   <PlayRoomHeader
     :isGameStarted="gameInfo.started"
     :gameTurn="gameInfo.turn"
-    :isHost="userInfo.isHost"
-    :playerNum="players.length"
+    :isHost="isHost"
+    :playerNum="gameInfo.players.length"
     :userInfo="userInfo"
     :leave="playerLeave"
     :start="startGame"
@@ -14,7 +14,7 @@
       <PlayRoomActionList :playerRole="userInfo.role" :gameTurn="gameInfo.turn" />
     </div>
     <div class="left-panel" v-if="!gameInfo.started"><PlayRoomFriendList /></div>
-    <PlayRoomPlayerList :players="players" :userInfo="userInfo"
+    <PlayRoomPlayerList :players="gameInfo.players" :userInfo="userInfo"
     :selectable="pendingAction.type !== '' && pendingAction.target === '' "
     :isDay="gameInfo.started && gameInfo.turn === 'dayStart' || gameInfo.turn ==='villager'" />
     <PlayRoomChatbox
@@ -24,7 +24,7 @@
       :userInfo="userInfo"
     />
   </div>
-  <PlayRoomRoleList :playerNum="players.length" />
+  <PlayRoomRoleList :playerNum="gameInfo.players.length" />
   </div>
 </template>
 
@@ -48,14 +48,13 @@ export default {
   },
   data() {
     return {
-      players: [],
       messages: [],
       gameInfo: {
+        players: [],
         started: false,
         turn: '',
       },
       userInfo: {
-        isHost: false,
         name: this.$store.getters['auth/getUserName'],
         role: '',
       },
@@ -65,45 +64,72 @@ export default {
       },
     };
   },
-  watch: {
-    players() {
-      this.userInfo.isHost = (this.userInfo.name === this.players[0].name);
+  computed: {
+    isHost() {
+      if (this.gameInfo.players.length > 0) {
+        return this.userInfo.name === this.gameInfo.players[0].name;
+      }
+      return false;
     },
+  },
+  watch: {
     gameInfo: {
       deep: true,
       handler() {
-        if (this.gameInfo.started && this.userInfo.isHost) {
+        if (this.gameInfo.started) {
           if (this.gameInfo.turn === '') {
             setTimeout(() => {
-              this.$store.getters['socket/getUserSocket'].emit('turnChange', { turn: 'gameStart' });
-            }, 1000);
+              if (this.gameInfo.players[0].name === this.userInfo.name) {
+                this.$store.getters['socket/getUserSocket'].emit('turnChange', { turn: 'gameStart' });
+              }
+            }, 100);
           } else if (this.gameInfo.turn === 'gameStart') {
             setTimeout(() => {
-              this.$store.getters['socket/getUserSocket'].emit('turnChange', { turn: 'guard' });
-            }, 6000);
+              if (this.gameInfo.players[0].name === this.userInfo.name) {
+                this.$store.getters['socket/getUserSocket'].emit('turnChange', { turn: 'nightStart' });
+              }
+            }, 5000);
+          } else if (this.gameInfo.turn === 'nightStart') {
+            setTimeout(() => {
+              if (this.gameInfo.players[0].name === this.userInfo.name) {
+                this.$store.getters['socket/getUserSocket'].emit('turnChange', { turn: 'guard' });
+              }
+            }, 3000);
           } else if (this.gameInfo.turn === 'villager') {
             setTimeout(() => {
-              this.$store.getters['socket/getUserSocket'].emit('turnChange', { turn: 'dayEnd' });
+              if (this.gameInfo.players[0].name === this.userInfo.name) {
+                this.$store.getters['socket/getUserSocket'].emit('turnChange', { turn: 'dayEnd' });
+              }
             }, 20000);
           } else if (this.gameInfo.turn === 'dayEnd') {
             setTimeout(() => {
-              this.$store.getters['socket/getUserSocket'].emit('turnChange', { turn: 'guard' });
+              if (this.gameInfo.players[0].name === this.userInfo.name) {
+                this.$store.getters['socket/getUserSocket'].emit('turnChange', { turn: 'nightStart' });
+              }
             }, 6000);
           } else if (this.gameInfo.turn === 'guard') {
             setTimeout(() => {
-              this.$store.getters['socket/getUserSocket'].emit('turnChange', { turn: 'wolf' });
+              if (this.gameInfo.players[0].name === this.userInfo.name) {
+                this.$store.getters['socket/getUserSocket'].emit('turnChange', { turn: 'wolf' });
+              }
             }, 6000);
           } else if (this.gameInfo.turn === 'wolf') {
             setTimeout(() => {
-              this.$store.getters['socket/getUserSocket'].emit('turnChange', { turn: 'seer' });
+              if (this.gameInfo.players[0].name === this.userInfo.name) {
+                this.$store.getters['socket/getUserSocket'].emit('turnChange', { turn: 'seer' });
+              }
             }, 6000);
           } else if (this.gameInfo.turn === 'seer') {
             setTimeout(() => {
-              this.$store.getters['socket/getUserSocket'].emit('turnChange', { turn: 'dayStart' });
+              if (this.gameInfo.players[0].name === this.userInfo.name) {
+                this.$store.getters['socket/getUserSocket'].emit('turnChange', { turn: 'dayStart' });
+              }
             }, 6000);
           } else if (this.gameInfo.turn === 'dayStart') {
             setTimeout(() => {
-              this.$store.getters['socket/getUserSocket'].emit('turnChange', { turn: 'villager' });
+              if (this.gameInfo.players[0].name === this.userInfo.name) {
+                this.$store.getters['socket/getUserSocket'].emit('turnChange', { turn: 'villager' });
+              }
             }, 6000);
           }
         }
@@ -149,9 +175,9 @@ export default {
     console.log('mounted');
     this.$store.getters['socket/getUserSocket'].on('roomPlayer', (room) => {
       console.log(room);
-      this.players = room.playerList;
+      this.gameInfo.players = room.playerList;
       this.gameInfo.started = room.isStarted;
-      const me = this.players.find(
+      const me = this.gameInfo.players.find(
         (player) => player.name === this.userInfo.name,
       );
       this.userInfo.role = me.role;

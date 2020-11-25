@@ -1,9 +1,9 @@
 <template>
   <div id="action-list">
-    <div v-if="gameTurn === 'villager'">
+    <div v-show="gameTurn === 'villager'">
       <PlayRoomActionListItem v-for="action in dayActions" :key="action" :action="action" />
     </div>
-    <div v-else>
+    <div v-show="gameTurn === playerRole">
       <PlayRoomActionListItem v-for="action in nightActions" :key="action" :action="action" />
     </div>
   </div>

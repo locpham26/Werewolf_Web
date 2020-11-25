@@ -7,7 +7,9 @@
         :votes="getVoteAvatars(player.votes)"
         :isMe="player.name === userInfo.name"
         :isWolf="player.role === 'wolf' && userInfo.role === 'wolf'"
-        :selectable="selectable" />
+        :selectable="selectable"
+        :visibleVote="visibleVote"
+        :isDead="!player.isAlive" />
   </div>
 </template>
 
@@ -39,6 +41,11 @@ export default {
         voteAvatars.push(this.getAvatarByName(vote));
       });
       return voteAvatars;
+    },
+  },
+  computed: {
+    visibleVote() {
+      return this.isDay || this.userInfo.role === 'wolf';
     },
   },
 };
