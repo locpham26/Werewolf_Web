@@ -75,70 +75,6 @@ export default {
       return this.pendingAction.type !== '' && this.pendingAction.target === '';
     },
   },
-  watch: {
-    gameInfo: {
-      deep: true,
-      handler() {
-        if (this.gameInfo.started) {
-          if (this.gameInfo.turn === '') {
-            setTimeout(() => {
-              if (this.gameInfo.players[0].name === this.userInfo.name) {
-                this.$store.getters['socket/getUserSocket'].emit('turnChange', { turn: 'gameStart' });
-              }
-            }, 100);
-          } else if (this.gameInfo.turn === 'gameStart') {
-            setTimeout(() => {
-              if (this.gameInfo.players[0].name === this.userInfo.name) {
-                this.$store.getters['socket/getUserSocket'].emit('turnChange', { turn: 'nightStart' });
-              }
-            }, 5000);
-          } else if (this.gameInfo.turn === 'nightStart') {
-            setTimeout(() => {
-              if (this.gameInfo.players[0].name === this.userInfo.name) {
-                this.$store.getters['socket/getUserSocket'].emit('turnChange', { turn: 'guard' });
-              }
-            }, 3000);
-          } else if (this.gameInfo.turn === 'villager') {
-            setTimeout(() => {
-              if (this.gameInfo.players[0].name === this.userInfo.name) {
-                this.$store.getters['socket/getUserSocket'].emit('turnChange', { turn: 'dayEnd' });
-              }
-            }, 20000);
-          } else if (this.gameInfo.turn === 'dayEnd') {
-            setTimeout(() => {
-              if (this.gameInfo.players[0].name === this.userInfo.name) {
-                this.$store.getters['socket/getUserSocket'].emit('turnChange', { turn: 'nightStart' });
-              }
-            }, 6000);
-          } else if (this.gameInfo.turn === 'guard') {
-            setTimeout(() => {
-              if (this.gameInfo.players[0].name === this.userInfo.name) {
-                this.$store.getters['socket/getUserSocket'].emit('turnChange', { turn: 'wolf' });
-              }
-            }, 6000);
-          } else if (this.gameInfo.turn === 'wolf') {
-            setTimeout(() => {
-              if (this.gameInfo.players[0].name === this.userInfo.name) {
-                this.$store.getters['socket/getUserSocket'].emit('turnChange', { turn: 'seer' });
-              }
-            }, 6000);
-          } else if (this.gameInfo.turn === 'seer') {
-            setTimeout(() => {
-              if (this.gameInfo.players[0].name === this.userInfo.name) {
-                this.$store.getters['socket/getUserSocket'].emit('turnChange', { turn: 'dayStart' });
-              }
-            }, 6000);
-          } else if (this.gameInfo.turn === 'dayStart') {
-            setTimeout(() => {
-              if (this.gameInfo.players[0].name === this.userInfo.name) {
-                this.$store.getters['socket/getUserSocket'].emit('turnChange', { turn: 'villager' });
-              }
-            }, 6000);
-          }
-        }
-      },
-    },
-  },
   methods: {
     playerLeave() {
       this.$store.getters['socket/getUserSocket'].emit('leave');
@@ -175,19 +111,24 @@ export default {
     };
   },
   mounted() {
-    console.log('mounted');
     this.$store.getters['socket/getUserSocket'].on('roomPlayer', (room) => {
-      console.log(room);
       this.gameInfo.players = room.playerList;
       this.gameInfo.started = room.isStarted;
+
       const me = this.gameInfo.players.find(
         (player) => player.name === this.userInfo.name,
       );
       this.userInfo.role = me.role;
     });
+
     this.$store.getters['socket/getUserSocket'].on('changeTurn', (turn) => {
       this.gameInfo.turn = turn;
+      if (this.userInfo.name === this.gameInfo.players[0].name) {
+        console.log(this.gameInfo.players);
+        this.$store.getters['socket/getUserSocket'].emit('turnChange');
+      }
     });
+
     this.$store.getters['socket/getUserSocket'].on('message', (message) => {
       this.messages.push(message);
     });

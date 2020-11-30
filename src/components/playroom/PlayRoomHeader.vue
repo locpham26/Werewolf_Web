@@ -18,7 +18,7 @@
         <p>Room ID: {{ $route.params.id }}</p>
         <button
           v-if="isHost && !isGameStarted"
-          :disabled="playerNum < 6"
+          :disabled="playerNum < 3"
           @click="start"
           class="red-text"
         >START</button>
