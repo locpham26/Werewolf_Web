@@ -54,7 +54,7 @@ export default {
   props: ['isGameStarted', 'gameTurn', 'isHost', 'playerNum', 'userInfo', 'leave', 'start'],
   data() {
     return {
-      countdown: 30,
+      countdown: '',
       night: 'Second Day',
       monitorMessage: '',
     };
@@ -87,6 +87,9 @@ export default {
       } else {
         this.monitorMessage = `${hangedPlayer.name} was hanged. ${hangedPlayer.name} was ${hangedPlayer.role}.`;
       }
+    });
+    this.$store.getters['socket/getUserSocket'].on('countDown', (count) => {
+      this.countdown = count;
     });
     this.$store.getters['socket/getUserSocket'].on('kill', (killedPlayer) => {
       if (this.userInfo.name === killedPlayer.name) {
