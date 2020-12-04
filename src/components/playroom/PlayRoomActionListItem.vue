@@ -19,6 +19,7 @@ export default {
   width: 100%;
   box-sizing: border-box;
   margin-bottom: 5px;
+  text-transform: capitalize;
   cursor: pointer;
   &:hover {
     background-color: $light;

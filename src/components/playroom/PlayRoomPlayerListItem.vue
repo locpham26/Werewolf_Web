@@ -10,7 +10,8 @@
           :src="require('@/assets/img/' + player + '.png')"
           v-show="visibleVote" />
         </div>
-        <div v-show="checkingRole">{{checkWolf}}</div>
+        <div v-show="checkRole.isChecking && name === checkRole.target"
+        :class="{'wolf': role==='wolf', 'not-wolf': role!=='wolf'}">{{checkRole.message}}</div>
       </div>
     </div>
   </div>
@@ -19,33 +20,8 @@
 <script>
 export default {
   name: 'PlayRoomPlayerListItem',
-  props: ['avatar', 'name', 'votes', 'isMe', 'isWolf', 'selectable', 'visibleVote', 'isDead', 'checkingRole'],
+  props: ['avatar', 'name', 'role', 'votes', 'isMe', 'isWolf', 'selectable', 'visibleVote', 'isDead', 'checkRole'],
   inject: ['selectTarget'],
-  data() {
-    return {
-      checkWolf: '',
-    };
-  },
-  watch: {
-    checkWolf(value) {
-      if (value !== '') {
-        setTimeout(() => {
-          this.checkWolf = '';
-        }, 2000);
-      }
-    },
-  },
-  mounted() {
-    this.$store.getters['socket/getUserSocket'].on('reveal', (isWolf) => {
-      console.log('reveal');
-      console.log(isWolf);
-      if (isWolf) {
-        this.checkWolf = 'This is a wolf';
-      } else {
-        this.checkWolf = 'Not a wolf';
-      }
-    });
-  },
 };
 </script>
 
@@ -90,6 +66,10 @@ export default {
 
 .wolf {
   color: $red;
+}
+
+.not-wolf {
+  color: $yellow;
 }
 
 .me {

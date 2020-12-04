@@ -57,6 +57,7 @@ export default {
       userInfo: {
         name: this.$store.getters['auth/getUserName'],
         role: '',
+        actions: '',
       },
       pendingAction: {
         type: '',
@@ -77,17 +78,23 @@ export default {
   },
   methods: {
     playerLeave() {
-      this.$store.getters['socket/getUserSocket'].emit('leave');
+      if (this.gameInfo.players.length > 1) {
+        this.$store.getters['socket/getUserSocket'].emit('leave', { userName: this.userInfo.name, roomId: this.$route.params.id });
+      } else if (this.gameInfo.players.length === 1) {
+        this.$store.getters['socket/getUserSocket'].emit('deleteRoom', { userName: this.userInfo.name, roomId: this.$route.params.id });
+      }
       this.$router.push('/homepage');
     },
     sendMessage(sentMessage, isFromWolf) {
       this.$store.getters['socket/getUserSocket'].emit('sendMessage', {
+        userName: this.userInfo.name,
         text: sentMessage,
         isFromWolf,
+        roomId: this.$route.params.id,
       });
     },
     startGame() {
-      this.$store.getters['socket/getUserSocket'].emit('start');
+      this.$store.getters['socket/getUserSocket'].emit('start', { roomId: this.$route.params.id });
     },
     callAction(actionType) {
       this.pendingAction.type = actionType;
@@ -99,6 +106,7 @@ export default {
         from: this.userInfo.name,
         target: this.pendingAction.target,
         type: this.pendingAction.type,
+        roomId: this.$route.params.id,
       });
       this.pendingAction.type = '';
       this.pendingAction.target = '';
@@ -111,6 +119,7 @@ export default {
     };
   },
   mounted() {
+    console.log(this.$store.getters['socket/getUserSocket']);
     this.$store.getters['socket/getUserSocket'].on('roomPlayer', (room) => {
       this.gameInfo.players = room.playerList;
       this.gameInfo.started = room.isStarted;
@@ -119,13 +128,14 @@ export default {
         (player) => player.name === this.userInfo.name,
       );
       this.userInfo.role = me.role;
+      this.userInfo.actions = me.actions;
     });
 
     this.$store.getters['socket/getUserSocket'].on('changeTurn', (turn) => {
       this.gameInfo.turn = turn;
       if (this.userInfo.name === this.gameInfo.players[0].name) {
         console.log(this.gameInfo.players);
-        this.$store.getters['socket/getUserSocket'].emit('turnChange');
+        this.$store.getters['socket/getUserSocket'].emit('turnChange', { roomId: this.$route.params.id });
       }
     });
 

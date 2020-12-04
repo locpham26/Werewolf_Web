@@ -4,7 +4,8 @@
       <PlayRoomActionListItem v-for="action in dayActions" :key="action" :action="action" />
     </div>
     <div v-show="gameTurn === playerRole">
-      <PlayRoomActionListItem v-for="action in nightActions" :key="action" :action="action" />
+      <PlayRoomActionListItem v-for="action in roleActions[playerRole].list"
+      :key="action" :action="action" />
     </div>
   </div>
 </template>
@@ -18,25 +19,28 @@ export default {
   components: { PlayRoomActionListItem },
   data() {
     return {
-      dayActions: ['Vote', 'Skip'],
+      dayActions: ['vote', 'skip'],
+      roleActions: {
+        wolf: {
+          list: ['kill', 'skip'],
+        },
+        guard: {
+          list: ['protect', 'skip'],
+          lastProtected: '',
+        },
+        seer: {
+          list: ['check', 'skip'],
+        },
+        witch: {
+          list: ['kill', 'protect', 'skip'],
+          kill: 1,
+          protect: 2,
+        },
+        villager: {
+          list: [],
+        },
+      },
     };
-  },
-  computed: {
-    nightActions() {
-      if (this.playerRole === 'wolf') {
-        return ['Kill', 'Skip'];
-      }
-      if (this.playerRole === 'guard') {
-        return ['Protect', 'Skip'];
-      }
-      if (this.playerRole === 'seer') {
-        return ['Check', 'Skip'];
-      }
-      if (this.playerRole === 'witch') {
-        return ['Kill', 'Protect', 'Skip'];
-      }
-      return [];
-    },
   },
 };
 </script>

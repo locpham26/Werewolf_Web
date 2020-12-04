@@ -4,12 +4,13 @@
         v-for="(player, i) in players" :key="i"
         :avatar="avatars[i]"
         :name="player.name"
+        :role="player.role"
         :votes="getVoteAvatars(player.votes)"
         :isMe="player.name === userInfo.name"
         :isWolf="player.role === 'wolf' && userInfo.role === 'wolf'"
         :selectable="selectable"
         :visibleVote="visibleVote"
-        :checkingRole="checkingRole"
+        :checkRole="checkRole"
         :isDead="!player.isAlive" />
   </div>
 </template>
@@ -29,6 +30,11 @@ export default {
         'light_blue', 'dark_orange', 'dark_red',
         'light_green', 'cyan', 'gray',
       ],
+      checkRole: {
+        message: '',
+        isChecking: false,
+        target: '',
+      },
     };
   },
   methods: {
@@ -48,9 +54,20 @@ export default {
     visibleVote() {
       return this.isDay || this.userInfo.role === 'wolf';
     },
-    checkingRole() {
-      return this.userInfo.role === 'seer' && this.gameTurn === 'seer';
+  },
+  watch: {
+    gameTurn(value) {
+      this.checkRole.isChecking = value === 'seer' && this.userInfo.role === 'seer';
+      if (value !== 'seer') {
+        this.checkRole.message = '';
+      }
     },
+  },
+  mounted() {
+    this.$store.getters['socket/getUserSocket'].on('reveal', ({ checkTarget, isWolf }) => {
+      this.checkRole.target = checkTarget;
+      this.checkRole.message = isWolf ? 'Wolf' : 'Not a wolf';
+    });
   },
 };
 </script>

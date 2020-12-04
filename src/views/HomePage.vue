@@ -33,8 +33,8 @@ export default {
     HomePlayRoomList,
   },
   created() {
-    this.$store.dispatch('socket/connect');
     this.name = this.$store.getters['auth/getUserName'];
+    this.$store.dispatch('socket/connect');
     this.$store.getters['socket/getUserSocket'].on('room', (allRooms) => {
       this.rooms = allRooms;
     });
