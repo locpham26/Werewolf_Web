@@ -1,7 +1,9 @@
 <template>
   <div class="box-dark d-fl" @click="selectTarget(name)"
-  :class="{'selectable': selectable, 'is-dead': isDead}">
-    <img :src="require('@/assets/img/' + avatar + '.png')" />
+  :class="{'selectable': selectable && !isDead, 'is-dead': isDead}">
+    <img :src="isDead ?
+    require('@/assets/img/grave.png') :
+    require('@/assets/img/' + avatar + '.png')" />
     <div class="player-info">
       <div :class="{'align-l': true, wolf: isWolf, me: isMe}">{{ name }}</div>
       <div class="vote-container d-fl">
@@ -33,11 +35,17 @@ export default {
   height: 70px;
   pointer-events: none;
   border: 1px solid transparent;
+  &:hover {
+    cursor: not-allowed;
+  }
 }
 
 .selectable {
   border: 1px solid magenta !important;
   pointer-events: auto;
+  &:hover {
+    cursor: pointer;
+  }
 }
 
 .player-info {
@@ -49,7 +57,8 @@ export default {
 }
 
 .box-dark > img {
-  width: 3rem;
+  max-width: 3.5rem;
+  min-width: 3rem;
   height: 3.7rem;
 }
 
@@ -78,6 +87,8 @@ export default {
 
 .is-dead {
   background-color: $light !important;
+  color: $black !important;
+  pointer-events: none;
   &:hover {
     cursor: not-allowed !important;
 }

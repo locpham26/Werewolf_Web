@@ -98,6 +98,13 @@ export default {
         this.monitorMessage = `${killedPlayer.name} was killed. ${killedPlayer.name} was ${killedPlayer.role}.`;
       }
     });
+    this.$store.getters['socket/getUserSocket'].on('lastProtected', (protectedPlayer) => {
+      if (protectedPlayer === '') {
+        this.monitorMessage = 'Choose anyone to protect';
+      } else {
+        this.monitorMessage = `Last night, you protect ${protectedPlayer}. Choose another player to protect tonight`;
+      }
+    });
   },
 };
 </script>
