@@ -1,12 +1,12 @@
 <template>
   <div>
+    <div class="box-gray input-container d-fl">
+      <input class="box-gray" placeholder="Enter Room ID"/>
+      <img src="@/assets/img/search.svg" />
+    </div>
     <div class="d-fl">
       <button class="box-black" @click="createRoom">Create Room</button>
       <button class="box-black">Available Rooms</button>
-      <div class="box-gray input-container d-fl">
-        <input class="box-gray" placeholder="Enter Room ID"/>
-        <img src="@/assets/img/search.svg" />
-      </div>
     </div>
   </div>
 </template>
@@ -63,8 +63,7 @@ input::placeholder {
 }
 
 .input-container {
-  width: 50%;
-  margin-left: auto;
+  margin-bottom: 5px;
   padding: 0;
   height: 38px;
 }
