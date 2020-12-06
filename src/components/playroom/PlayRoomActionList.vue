@@ -36,6 +36,9 @@ export default {
           kill: 1,
           protect: 2,
         },
+        hunter: {
+          list: ['shoot', 'skip'],
+        },
         villager: {
           list: [],
         },

@@ -77,6 +77,10 @@ export default {
         this.monitorMessage = 'Last night, no one was killed.';
       } else if (turn === 'nightStart') {
         this.monitorMessage = 'The night has come.';
+      } else if (turn === 'hunter') {
+        this.monitorMessage = 'Shoot someone hunter.';
+      } else if (turn === 'hunterShoot') {
+        this.monitorMessage = 'No one was shot by the hunter.';
       }
     },
   },
@@ -103,6 +107,13 @@ export default {
         this.monitorMessage = 'Choose anyone to protect';
       } else {
         this.monitorMessage = `Last night, you protect ${protectedPlayer}. Choose another player to protect tonight`;
+      }
+    });
+    this.$store.getters['socket/getUserSocket'].on('hunterShoot', (shotPlayer) => {
+      if (shotPlayer.name === this.userInfo.name) {
+        this.monitorMessage = 'You were shot by the hunter.';
+      } else {
+        this.monitorMessage = `${shotPlayer.name} was shot by the hunter. ${shotPlayer.name} was ${shotPlayer.role}`;
       }
     });
   },
