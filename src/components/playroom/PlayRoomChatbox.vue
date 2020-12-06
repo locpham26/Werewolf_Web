@@ -74,7 +74,7 @@ export default {
 
 .box-dark {
   width: 18%;
-  min-height: 28rem;
+  // min-height: 28rem;
   box-sizing: border-box;
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;

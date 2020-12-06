@@ -154,7 +154,8 @@ export default {
 }
 
 #playroom-body {
-  min-height: 28rem;
+  // min-height: 28rem;
+  height: 60%;
   align-items: stretch;
   justify-content: space-between;
   padding-left: 20px;
