@@ -52,6 +52,7 @@ export default {
 
 #home-body {
   height: 75%;
+  margin-top: 7.5%;
   align-items: flex-start;
 }
 

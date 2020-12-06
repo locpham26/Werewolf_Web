@@ -6,8 +6,8 @@
     </div>
     <div class="home-room-container">
       <div v-for="room in rooms" class="box-white fl-center" :key="room.id">
-        <p>{{ room.id }}</p>
-        <p>{{ room.playerList.length }}/12</p>
+        <p class="home-room-container-item">{{ room.id }}</p>
+        <p class="home-room-container-item">{{ room.playerList.length }}/12</p>
         <button class="box-black" @click="joinRoom(room.id)">Join</button>
       </div>
     </div>
@@ -40,11 +40,18 @@ export default {
   height: 100%;
 }
 
+.d-fl p:first-child {
+  padding-left: 10px;
+  width: calc(33% + 10px);
+}
+
 .d-fl p:nth-child(2){
-  margin-left: calc(50% - 39px - 21.5px);
+  text-align: center;
+  margin-right: calc(33% + 10px);
 }
 
 .d-fl p {
+  width: 33%;
   margin-top: 15px;
   margin-bottom: 10px;
   font-family: $font-bold;
@@ -53,8 +60,13 @@ export default {
 .box-white {
   justify-content: space-between;
   margin-top: 5px;
-  padding-top: 0;
-  padding-bottom: 0;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+.box-white p {
+  margin-left: 0;
+  margin-right: 0;
 }
 
 button:hover {
@@ -66,8 +78,8 @@ button:hover {
   overflow-y: hidden;
 }
 
-.home-room-container p:nth-child(2) {
-  padding-left: 33px;
+.home-room-container-item {
+  width: 33%;
 }
 
 </style>
