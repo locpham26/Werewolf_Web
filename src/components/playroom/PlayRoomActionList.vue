@@ -4,7 +4,7 @@
       <PlayRoomActionListItem v-for="action in dayActions" :key="action" :action="action" />
     </div>
     <div v-show="gameTurn === playerRole">
-      <PlayRoomActionListItem v-for="action in roleActions[playerRole].list"
+      <PlayRoomActionListItem v-for="action in roleActions[playerRole]"
       :key="action" :action="action" />
     </div>
   </div>
@@ -21,27 +21,12 @@ export default {
     return {
       dayActions: ['vote', 'skip'],
       roleActions: {
-        wolf: {
-          list: ['kill', 'skip'],
-        },
-        guard: {
-          list: ['protect', 'skip'],
-          lastProtected: '',
-        },
-        seer: {
-          list: ['check', 'skip'],
-        },
-        witch: {
-          list: ['kill', 'protect', 'skip'],
-          kill: 1,
-          protect: 2,
-        },
-        hunter: {
-          list: ['shoot', 'skip'],
-        },
-        villager: {
-          list: [],
-        },
+        wolf: ['kill', 'skip'],
+        guard: ['protect', 'skip'],
+        seer: ['check', 'skip'],
+        witch: ['poison', 'save', 'skip'],
+        hunter: ['shoot', 'skip'],
+        villager: [],
       },
     };
   },

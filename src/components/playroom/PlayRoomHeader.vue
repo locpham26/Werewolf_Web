@@ -11,9 +11,13 @@
       <div v-if="isGameStarted" class="fl-center">
         <div class="box-gray">{{ countdown }}s</div>
         <p>{{ night }}</p>
-        <p>{{ gameTurn }}</p>
+        <!-- <p>{{ gameTurn }}</p> -->
       </div>
-      <div v-if="isGameStarted" class="box-gray">{{ monitorMessage }}</div>
+      <div v-if="isGameStarted && gameTurn !== ''" class="box-gray">
+        {{ gameTurn === userInfo.role ?
+        monitorMessage[gameTurn].roleMessage :
+        monitorMessage[gameTurn].generalMessage }}
+      </div>
       <div v-if="!isGameStarted" class="box-gray d-fl">
         <p>Room ID: {{ $route.params.id }}</p>
         <button
@@ -56,40 +60,55 @@ export default {
     return {
       countdown: '',
       night: 'Second Day',
-      monitorMessage: '',
+      monitorMessage: {
+        gameStart: {
+          generalMessage: 'The game has started. You have been assigned a role. The first night will come soon. Be prepared.',
+        },
+        villager: {
+          roleMessage: 'Everyone!! Discuss with other and vote someone to be hanged.',
+          generalMessage: 'Everyone!! Discuss with other and vote someone to be hanged.',
+        },
+        guard: {
+          roleMessage: 'Wake up guard!! Choose anyone to protect from being killed',
+          generalMessage: 'It\'s guard\'s turn',
+        },
+        wolf: {
+          roleMessage: 'Wake up wolves!! Discuss with other wolves and kill someone tonight.',
+          generalMessage: 'It\'s wolf\'s turn',
+        },
+        seer: {
+          roleMessage: 'Wake up seer!! Check someone\'s role.',
+          generalMessage: 'It\'s seer\'s turn',
+        },
+        witch: {
+          roleMessage: 'Wake up witch!! Tonight, the wolves failed to kill anyone. You can poison someone.',
+          generalMessage: 'It\'s witch\'s turn',
+        },
+        hunter: {
+          roleMessage: 'Hunter!! Shoot someone before you die.',
+          generalMessage: 'Hunter is deciding who to shoot.',
+        },
+        hunterShoot: {
+          generalMessage: 'No one was shot by the hunter.',
+        },
+        dayStart: {
+          generalMessage: 'Last night, no one was killed.',
+        },
+        dayEnd: {
+          generalMessage: 'No one was hanged today',
+        },
+        nightStart: {
+          generalMessage: 'The night has come.',
+        },
+      },
     };
-  },
-  watch: {
-    gameTurn(turn) {
-      if (turn === 'gameStart') {
-        this.monitorMessage = 'The game has started. You have been assigned a role. The first night will come soon. Be prepared.';
-      } else if (turn === 'villager') {
-        this.monitorMessage = 'It\'s villagers\' turn. Discuss with other and vote someone to be hanged.';
-      } else if (turn === 'guard') {
-        this.monitorMessage = 'Wake up guard. Protect someone.';
-      } else if (turn === 'wolf') {
-        this.monitorMessage = 'Wake up wolves. Discuss with other wolves and kill someone.';
-      } else if (turn === 'seer') {
-        this.monitorMessage = 'Wake up seer. Want to check someone?';
-      } else if (turn === 'dayEnd') {
-        this.monitorMessage = 'No one was hanged today.';
-      } else if (turn === 'dayStart') {
-        this.monitorMessage = 'Last night, no one was killed.';
-      } else if (turn === 'nightStart') {
-        this.monitorMessage = 'The night has come.';
-      } else if (turn === 'hunter') {
-        this.monitorMessage = 'Shoot someone hunter.';
-      } else if (turn === 'hunterShoot') {
-        this.monitorMessage = 'No one was shot by the hunter.';
-      }
-    },
   },
   mounted() {
     this.$store.getters['socket/getUserSocket'].on('hang', (hangedPlayer) => {
       if (this.userInfo.name === hangedPlayer.name) {
-        this.monitorMessage = 'You were hanged.';
+        this.monitorMessage.dayEnd.generalMessage = 'You were hanged.';
       } else {
-        this.monitorMessage = `${hangedPlayer.name} was hanged. ${hangedPlayer.name} was ${hangedPlayer.role}.`;
+        this.monitorMessage.dayEnd.generalMessage = `${hangedPlayer.name} was hanged. ${hangedPlayer.name} was ${hangedPlayer.role}.`;
       }
     });
     this.$store.getters['socket/getUserSocket'].on('countDown', (count) => {
@@ -97,24 +116,25 @@ export default {
     });
     this.$store.getters['socket/getUserSocket'].on('kill', (killedPlayer) => {
       if (this.userInfo.name === killedPlayer.name) {
-        this.monitorMessage = 'You were killed.';
+        this.monitorMessage.dayStart.generalMessage = 'You were killed.';
       } else {
-        this.monitorMessage = `${killedPlayer.name} was killed. ${killedPlayer.name} was ${killedPlayer.role}.`;
+        this.monitorMessage.dayStart.generalMessage = `${killedPlayer.name} was killed. ${killedPlayer.name} was ${killedPlayer.role}.`;
       }
     });
     this.$store.getters['socket/getUserSocket'].on('lastProtected', (protectedPlayer) => {
-      if (protectedPlayer === '') {
-        this.monitorMessage = 'Choose anyone to protect';
-      } else {
-        this.monitorMessage = `Last night, you protect ${protectedPlayer}. Choose another player to protect tonight`;
+      if (protectedPlayer !== '') {
+        this.monitorMessage.guard.roleMessage = `Last night, you protect ${protectedPlayer}. Choose another player to protect tonight`;
       }
     });
     this.$store.getters['socket/getUserSocket'].on('hunterShoot', (shotPlayer) => {
       if (shotPlayer.name === this.userInfo.name) {
-        this.monitorMessage = 'You were shot by the hunter.';
+        this.monitorMessage.hunterShoot.generalMessage = 'You were shot by the hunter.';
       } else {
-        this.monitorMessage = `${shotPlayer.name} was shot by the hunter. ${shotPlayer.name} was ${shotPlayer.role}`;
+        this.monitorMessage.hunterShoot.generalMessage = `${shotPlayer.name} was shot by the hunter. ${shotPlayer.name} was ${shotPlayer.role}`;
       }
+    });
+    this.$store.getters['socket/getUserSocket'].on('killedByWolf', (killedPlayer) => {
+      this.monitorMessage.witch.roleMessage = `The wolves plan to kill ${killedPlayer} tonight. Save ${killedPlayer} or poison someone.`;
     });
   },
 };
