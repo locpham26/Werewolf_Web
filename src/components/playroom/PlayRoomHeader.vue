@@ -11,7 +11,7 @@
       <div v-if="isGameStarted" class="fl-center">
         <div class="box-gray">{{ countdown }}s</div>
         <p>{{ night }}</p>
-        <!-- <p>{{ gameTurn }}</p> -->
+        <p>{{ gameTurn }}</p>
       </div>
       <div v-if="isGameStarted && gameTurn !== ''" class="box-gray">
         {{ gameTurn === userInfo.role ?
@@ -37,16 +37,9 @@
         :src="isGameStarted ?
         require('@/assets/img/' + userInfo.role + '.png') :
         require('@/assets/img/villager.png')"/>
-        <p
-        :class="[
-          'my-role',
-          {
-            'red-text': userInfo.role === 'wolf',
-          }
-        ]"
-      >
-        You're {{ userInfo.role }}
-      </p>
+        <p :class="['my-role',{'red-text': userInfo.role === 'wolf'}]">
+          You're {{ userInfo.role }}
+        </p>
       </div>
     </div>
   </div>
@@ -92,10 +85,10 @@ export default {
           generalMessage: 'No one was shot by the hunter.',
         },
         dayStart: {
-          generalMessage: 'Last night, no one was killed.',
+          generalMessage: '',
         },
         dayEnd: {
-          generalMessage: 'No one was hanged today',
+          generalMessage: '',
         },
         nightStart: {
           generalMessage: 'The night has come.',
@@ -105,36 +98,58 @@ export default {
   },
   mounted() {
     this.$store.getters['socket/getUserSocket'].on('hang', (hangedPlayer) => {
-      if (this.userInfo.name === hangedPlayer.name) {
-        this.monitorMessage.dayEnd.generalMessage = 'You were hanged.';
+      if (hangedPlayer !== '') {
+        if (hangedPlayer === this.userInfo.name) {
+          this.monitorMessage.dayEnd.generalMessage = 'You were hanged.';
+        } else {
+          this.monitorMessage.dayEnd.generalMessage = `${hangedPlayer} was hanged.`;
+        }
       } else {
-        this.monitorMessage.dayEnd.generalMessage = `${hangedPlayer.name} was hanged. ${hangedPlayer.name} was ${hangedPlayer.role}.`;
+        this.monitorMessage.dayEnd.generalMessage = 'No one was hanged.';
       }
     });
     this.$store.getters['socket/getUserSocket'].on('countDown', (count) => {
       this.countdown = count;
     });
-    this.$store.getters['socket/getUserSocket'].on('kill', (killedPlayer) => {
-      if (this.userInfo.name === killedPlayer.name) {
-        this.monitorMessage.dayStart.generalMessage = 'You were killed.';
+    this.$store.getters['socket/getUserSocket'].on('kill', ({ killedPlayer, poisonedPlayer }) => {
+      if (killedPlayer !== '' && poisonedPlayer === '') {
+        this.monitorMessage.dayStart.generalMessage = (killedPlayer === this.userInfo.name) ? 'You were killed by the wolves.' : `${killedPlayer} was killed by the wolves.`;
+      } else if (killedPlayer === '' && poisonedPlayer !== '') {
+        this.monitorMessage.dayStart.generalMessage = (poisonedPlayer === this.userInfo.name) ? 'You were killed by the witch.' : `${poisonedPlayer} was poisoned by the witch.`;
+      } else if (killedPlayer !== '' && poisonedPlayer !== '') {
+        if (poisonedPlayer === this.userInfo.name && killedPlayer === this.userInfo.name) {
+          this.monitorMessage.dayStart.generalMessage = 'You were killed by the wolves and poisoned by the witch. Sorry!!';
+        } else if (poisonedPlayer === this.userInfo.name && killedPlayer !== this.userInfo.name) {
+          this.monitorMessage.dayStart.generalMessage = `You were poisoned by the witch. ${killedPlayer} was killed by the wolves.`;
+        } else if (killedPlayer === this.userInfo.name && poisonedPlayer !== this.userInfo.name) {
+          this.monitorMessage.dayStart.generalMessage = `You were killed by the wolves. ${poisonedPlayer} was poisoned by the witch.`;
+        } else {
+          this.monitorMessage.dayStart.generalMessage = `${killedPlayer} was killed by the wolves. ${poisonedPlayer} was poisoned by the witch.`;
+        }
       } else {
-        this.monitorMessage.dayStart.generalMessage = `${killedPlayer.name} was killed. ${killedPlayer.name} was ${killedPlayer.role}.`;
+        this.monitorMessage.dayStart.generalMessage = 'It was a peaceful night. No one lost their lives.';
       }
     });
     this.$store.getters['socket/getUserSocket'].on('lastProtected', (protectedPlayer) => {
       if (protectedPlayer !== '') {
         this.monitorMessage.guard.roleMessage = `Last night, you protect ${protectedPlayer}. Choose another player to protect tonight`;
+      } else {
+        this.monitorMessage.guard.roleMessage = 'Wake up guard!! Choose anyone to protect from being killed';
       }
     });
     this.$store.getters['socket/getUserSocket'].on('hunterShoot', (shotPlayer) => {
-      if (shotPlayer.name === this.userInfo.name) {
+      if (shotPlayer === this.userInfo.name) {
         this.monitorMessage.hunterShoot.generalMessage = 'You were shot by the hunter.';
       } else {
-        this.monitorMessage.hunterShoot.generalMessage = `${shotPlayer.name} was shot by the hunter. ${shotPlayer.name} was ${shotPlayer.role}`;
+        this.monitorMessage.hunterShoot.generalMessage = `${shotPlayer} was shot by the hunter.`;
       }
     });
     this.$store.getters['socket/getUserSocket'].on('killedByWolf', (killedPlayer) => {
-      this.monitorMessage.witch.roleMessage = `The wolves plan to kill ${killedPlayer} tonight. Save ${killedPlayer} or poison someone.`;
+      if (killedPlayer !== '') {
+        this.monitorMessage.witch.roleMessage = `The wolves plan to kill ${killedPlayer} tonight. Save ${killedPlayer} or poison someone.`;
+      } else {
+        this.monitorMessage.witch.roleMessage = 'Wake up witch!! Tonight, the wolves failed to kill anyone. You can poison someone.';
+      }
     });
   },
 };
