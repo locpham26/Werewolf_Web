@@ -5,7 +5,7 @@
     </div>
     <div v-show="gameTurn === playerRole">
       <PlayRoomActionListItem v-for="action in roleActions[playerRole]"
-      :key="action" :action="action" />
+      :key="action" :action="action" :notAvailable="checkAvailability(action)" />
     </div>
   </div>
 </template>
@@ -15,7 +15,7 @@ import PlayRoomActionListItem from './PlayRoomActionListItem';
 
 export default {
   name: 'PlayRoomActionList',
-  props: ['playerRole', 'gameTurn'],
+  props: ['playerRole', 'gameTurn', 'userName'],
   components: { PlayRoomActionListItem },
   data() {
     return {
@@ -28,7 +28,28 @@ export default {
         hunter: ['shoot', 'skip'],
         villager: [],
       },
+      disabledActions: [],
     };
+  },
+  methods: {
+    checkAvailability(action) {
+      return this.disabledActions.includes(action);
+    },
+  },
+  watch: {
+    gameTurn(value) {
+      if (value === 'dayStart') {
+        const protectIndex = this.disabledActions.findIndex((action) => action === 'protect');
+        const checkIndex = this.disabledActions.findIndex((action) => action === 'check');
+        this.disabledActions.splice(protectIndex, 1);
+        this.disabledActions.splice(checkIndex, 1);
+      }
+    },
+  },
+  mounted() {
+    this.$store.getters['socket/getUserSocket'].on('disable', (type) => {
+      this.disabledActions.push(type);
+    });
   },
 };
 </script>

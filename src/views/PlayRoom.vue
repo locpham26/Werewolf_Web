@@ -11,7 +11,8 @@
   />
   <div id="playroom-body" class="fl-center">
     <div class="left-panel" v-if="gameInfo.started" >
-      <PlayRoomActionList :playerRole="userInfo.role" :gameTurn="gameInfo.turn" />
+      <PlayRoomActionList :playerRole="userInfo.role"
+      :gameTurn="gameInfo.turn" :userName="userInfo.name" />
     </div>
     <div class="left-panel" v-if="!gameInfo.started"><PlayRoomFriendList /></div>
     <PlayRoomPlayerList :players="gameInfo.players" :userInfo="userInfo"
@@ -57,7 +58,6 @@ export default {
       userInfo: {
         name: this.$store.getters['auth/getUserName'],
         role: '',
-        actions: '',
       },
       pendingAction: {
         type: '',

@@ -1,5 +1,5 @@
 <template>
-  <div class="box-dark" @click="invokeAction(action)">
+  <div class="box-dark" :class="{'disabled': notAvailable}" @click="invokeAction(action)">
     {{ action }}
   </div>
 </template>
@@ -7,7 +7,7 @@
 <script>
 export default {
   name: 'PlayRoomActionListItem',
-  props: ['action'],
+  props: ['action', 'notAvailable'],
   inject: ['invokeAction'],
 };
 </script>
@@ -26,4 +26,12 @@ export default {
     color: $black;
   }
 }
+
+.disabled {
+  pointer-events: none;
+  background-color: $light;
+  color: $dark;
+  opacity: 0.7;
+}
+
 </style>
