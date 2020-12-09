@@ -11,7 +11,7 @@
       <div v-if="isGameStarted" class="fl-center">
         <div class="box-gray">{{ countdown }}s</div>
         <p>{{ night }}</p>
-        <p>{{ gameTurn }}</p>
+        <p>{{ gameTurn.slice(0, userInfo.role.length) }}</p>
       </div>
       <div v-if="isGameStarted && gameTurn !== ''" class="box-gray">
         {{ gameTurn === userInfo.role ?
@@ -77,11 +77,18 @@ export default {
           roleMessage: 'Wake up witch!! Tonight, the wolves failed to kill anyone. You can poison someone.',
           generalMessage: 'It\'s witch\'s turn',
         },
-        hunter: {
+        hunterDay: {
           roleMessage: 'Hunter!! Shoot someone before you die.',
           generalMessage: 'Hunter is deciding who to shoot.',
         },
-        hunterShoot: {
+        hunterShootDay: {
+          generalMessage: 'No one was shot by the hunter.',
+        },
+        hunterNight: {
+          roleMessage: 'Hunter!! Shoot someone before you die.',
+          generalMessage: 'Hunter is deciding who to shoot.',
+        },
+        hunterShootNight: {
           generalMessage: 'No one was shot by the hunter.',
         },
         dayStart: {
@@ -92,6 +99,12 @@ export default {
         },
         nightStart: {
           generalMessage: 'The night has come.',
+        },
+        gameEnd: {
+          generalMessage: '',
+        },
+        end: {
+          generalMessage: '',
         },
       },
     };
@@ -138,10 +151,10 @@ export default {
       }
     });
     this.$store.getters['socket/getUserSocket'].on('hunterShoot', (shotPlayer) => {
-      if (shotPlayer === this.userInfo.name) {
-        this.monitorMessage.hunterShoot.generalMessage = 'You were shot by the hunter.';
-      } else {
-        this.monitorMessage.hunterShoot.generalMessage = `${shotPlayer} was shot by the hunter.`;
+      if (this.gameTurn === 'hunterShootDay') {
+        this.monitorMessage.hunterShootDay.generalMessage = (shotPlayer === this.userInfo.name) ? 'You were shot by the hunter.' : `${shotPlayer} was shot by the hunter.`;
+      } else if (this.gameTurn === 'hunterShootNight') {
+        this.monitorMessage.hunterShootNight.generalMessage = (shotPlayer === this.userInfo.name) ? 'You were shot by the hunter.' : `${shotPlayer} was shot by the hunter.`;
       }
     });
     this.$store.getters['socket/getUserSocket'].on('killedByWolf', (killedPlayer) => {
@@ -150,6 +163,9 @@ export default {
       } else {
         this.monitorMessage.witch.roleMessage = 'Wake up witch!! Tonight, the wolves failed to kill anyone. You can poison someone.';
       }
+    });
+    this.$store.getters['socket/getUserSocket'].on('win', (winningSide) => {
+      this.monitorMessage.gameEnd.generalMessage = (winningSide === 'wolf') ? 'The game has ended. The wolves win.' : 'The game has ended. The villagers win.';
     });
   },
 };

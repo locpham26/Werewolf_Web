@@ -3,7 +3,7 @@
     <div v-show="gameTurn === 'villager'">
       <PlayRoomActionListItem v-for="action in dayActions" :key="action" :action="action" />
     </div>
-    <div v-show="gameTurn === playerRole">
+    <div v-show="gameTurn.slice(0, playerRole.length) === playerRole">
       <PlayRoomActionListItem v-for="action in roleActions[playerRole]"
       :key="action" :action="action" :notAvailable="checkAvailability(action)" />
     </div>

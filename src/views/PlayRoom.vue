@@ -73,7 +73,9 @@ export default {
       return false;
     },
     selectable() {
-      return this.pendingAction.type !== '' && this.pendingAction.target === '' && (this.gameInfo.turn === this.userInfo.role || this.gameInfo.turn === 'villager');
+      return this.pendingAction.type !== ''
+      && this.pendingAction.target === ''
+      && (this.gameInfo.turn.slice(0, this.userInfo.role.length) === this.userInfo.role || this.gameInfo.turn === 'villager');
     },
   },
   methods: {
