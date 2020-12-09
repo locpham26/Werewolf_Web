@@ -97,7 +97,11 @@ export default {
       this.$store.getters['socket/getUserSocket'].emit('start', { roomId: this.$route.params.id });
     },
     callAction(actionType) {
-      this.pendingAction.type = actionType;
+      if (actionType === 'skip') {
+        this.$store.getters['socket/getUserSocket'].emit('skipTurn', { roomId: this.$route.params.id });
+      } else {
+        this.pendingAction.type = actionType;
+      }
       console.log(this.pendingAction.type);
     },
     chooseTarget(targetName) {
@@ -119,7 +123,6 @@ export default {
     };
   },
   mounted() {
-    console.log(this.$store.getters['socket/getUserSocket']);
     this.$store.getters['socket/getUserSocket'].on('roomPlayer', (room) => {
       this.gameInfo.players = room.playerList;
       this.gameInfo.started = room.isStarted;
@@ -131,11 +134,11 @@ export default {
       this.userInfo.actions = me.actions;
     });
 
-    this.$store.getters['socket/getUserSocket'].on('changeTurn', (turn) => {
-      this.gameInfo.turn = turn;
+    this.$store.getters['socket/getUserSocket'].on('changeTurn', (data) => {
+      console.log(data.roomTurn);
+      this.gameInfo.turn = data.roomTurn;
       if (this.userInfo.name === this.gameInfo.players[0].name) {
-        console.log(this.gameInfo.players);
-        this.$store.getters['socket/getUserSocket'].emit('turnChange', { roomId: this.$route.params.id });
+        this.$store.getters['socket/getUserSocket'].emit('turnChange', { roomId: this.$route.params.id, skipped: data.skipped });
       }
     });
 
