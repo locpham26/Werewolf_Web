@@ -8,7 +8,7 @@
       <div id="home-body-right" class="box-gray">
         <HomeButtonContainer />
         <HomePlayRoomList :rooms="rooms" v-if="rooms.length > 0" />
-        <div id="noti" v-else>There is no available room at the moment. Please create one.</div>
+        <div id="noti" v-else>{{message}}</div>
       </div>
     </div>
   </div>
@@ -21,22 +21,33 @@ import HomePlayRoomList from '../components/homepage/HomePlayRoomList';
 
 export default {
   name: 'HomePage',
-  data() {
-    return {
-      name: null,
-      rooms: [],
-    };
-  },
   components: {
     HomeFriendList,
     HomeButtonContainer,
     HomePlayRoomList,
   },
-  created() {
+  data() {
+    return {
+      name: null,
+      rooms: [],
+      inSearch: false,
+    };
+  },
+  computed: {
+    message() {
+      return (this.inSearch) ? 'There is no match.' : 'There is no available room at the moment. Please create one.';
+    },
+  },
+  mounted() {
     this.name = this.$store.getters['auth/getUserName'];
     this.$store.dispatch('socket/connect');
     this.$store.getters['socket/getUserSocket'].on('room', (allRooms) => {
+      this.inSearch = false;
       this.rooms = allRooms;
+    });
+    this.$store.getters['socket/getUserSocket'].on('searchedRoom', (searchedRooms) => {
+      this.inSearch = true;
+      this.rooms = searchedRooms;
     });
   },
 };

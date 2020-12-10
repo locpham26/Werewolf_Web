@@ -29,8 +29,6 @@ export default {
 
 .disabled {
   pointer-events: none;
-  background-color: $light;
-  color: $dark;
   opacity: 0.7;
 }
 

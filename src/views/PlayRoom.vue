@@ -101,10 +101,17 @@ export default {
     callAction(actionType) {
       if (actionType === 'skip') {
         this.$store.getters['socket/getUserSocket'].emit('skipTurn', { roomId: this.$route.params.id });
+        if (this.gameInfo.turn === 'villager' || this.gameInfo.turn === 'wolf') {
+          this.$store.getters['socket/getUserSocket'].emit('playerAction', {
+            from: this.userInfo.name,
+            target: '',
+            type: 'skip',
+            roomId: this.$route.params.id,
+          });
+        }
       } else {
         this.pendingAction.type = actionType;
       }
-      console.log(this.pendingAction.type);
     },
     chooseTarget(targetName) {
       this.pendingAction.target = targetName;

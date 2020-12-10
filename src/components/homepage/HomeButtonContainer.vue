@@ -1,12 +1,12 @@
 <template>
   <div>
     <div class="box-gray input-container d-fl">
-      <input class="box-gray" placeholder="Enter Room ID"/>
-      <img src="@/assets/img/search.svg" />
+      <input class="box-gray" v-model="searched" placeholder="Enter Room ID"/>
+      <img @click="searchRoom" src="@/assets/img/search.svg" />
     </div>
     <div class="d-fl">
       <button class="box-black" @click="createRoom">Create Room</button>
-      <button class="box-black">Available Rooms</button>
+      <button class="box-black" @click="showRooms">Available Rooms</button>
     </div>
   </div>
 </template>
@@ -14,6 +14,11 @@
 <script>
 export default {
   name: 'HomeButtonContainer',
+  data() {
+    return {
+      searched: '',
+    };
+  },
   methods: {
     createRoom() {
       const socket = this.$store.getters['socket/getUserSocket'];
@@ -30,6 +35,13 @@ export default {
         userName: name,
       });
       this.$router.push(`/playroom/${roomId}`);
+    },
+    searchRoom() {
+      this.$store.getters['socket/getUserSocket'].emit('searchRoom', { roomId: this.searched });
+      this.searched = '';
+    },
+    showRooms() {
+      this.$store.getters['socket/getUserSocket'].emit('showRooms');
     },
   },
 };
@@ -69,6 +81,7 @@ input::placeholder {
 }
 
 .input-container img {
+  cursor: pointer;
   margin-right: 5px;
 }
 </style>

@@ -1,7 +1,8 @@
 <template>
   <div id="action-list">
     <div v-show="gameTurn === 'villager'">
-      <PlayRoomActionListItem v-for="action in dayActions" :key="action" :action="action" />
+      <PlayRoomActionListItem v-for="action in dayActions" :key="action" :action="action"
+      :notAvailable="checkAvailability(action)"/>
     </div>
     <div v-show="gameTurn.slice(0, playerRole.length) === playerRole">
       <PlayRoomActionListItem v-for="action in roleActions[playerRole]"
@@ -35,20 +36,27 @@ export default {
     checkAvailability(action) {
       return this.disabledActions.includes(action);
     },
+    removeFromDisabledList(actionList) {
+      actionList.forEach((actionType) => {
+        const actionIndex = this.disabledActions.findIndex((action) => action === actionType);
+        if (actionIndex) {
+          this.disabledActions.splice(actionIndex, 1);
+        }
+      });
+    },
   },
   watch: {
     gameTurn(value) {
       if (value === 'dayStart') {
-        const protectIndex = this.disabledActions.findIndex((action) => action === 'protect');
-        const checkIndex = this.disabledActions.findIndex((action) => action === 'check');
-        this.disabledActions.splice(protectIndex, 1);
-        this.disabledActions.splice(checkIndex, 1);
+        this.removeFromDisabledList(['protect', 'check', 'kill', 'skip']);
+      } else if (value === 'dayEnd') {
+        this.removeFromDisabledList(['skip', 'vote']);
       }
     },
   },
   mounted() {
-    this.$store.getters['socket/getUserSocket'].on('disable', (type) => {
-      this.disabledActions.push(type);
+    this.$store.getters['socket/getUserSocket'].on('disable', (actionList) => {
+      this.disabledActions = this.disabledActions.concat(actionList);
     });
   },
 };

@@ -9,9 +9,10 @@
 
     <div :style="{marginTop: !isGameStarted && 'auto'}" id="monitor">
       <div v-if="isGameStarted" class="fl-center">
-        <div class="box-gray">{{ countdown }}s</div>
+        <div class="box-gray" v-show="gameTurn !== 'dayStart' && 'dayEnd' && 'nightStart'
+        && 'gameStart' && 'gameEnd'">{{ countdown }}s</div>
         <p>{{ night }}</p>
-        <p>{{ gameTurn.slice(0, userInfo.role.length) }}</p>
+        <p>{{ gameTurn }}</p>
       </div>
       <div v-if="isGameStarted && gameTurn !== ''" class="box-gray">
         {{ gameTurn === userInfo.role ?
@@ -58,8 +59,8 @@ export default {
           generalMessage: 'The game has started. You have been assigned a role. The first night will come soon. Be prepared.',
         },
         villager: {
-          roleMessage: 'Everyone!! Discuss with other and vote someone to be hanged.',
-          generalMessage: 'Everyone!! Discuss with other and vote someone to be hanged.',
+          roleMessage: 'Everyone!! A new day has come. Discuss with other and vote someone to be hanged.',
+          generalMessage: 'Everyone!! A new day has come. Discuss with other and vote someone to be hanged.',
         },
         guard: {
           roleMessage: 'Wake up guard!! Choose anyone to protect from being killed',
@@ -118,7 +119,7 @@ export default {
           this.monitorMessage.dayEnd.generalMessage = `${hangedPlayer} was hanged.`;
         }
       } else {
-        this.monitorMessage.dayEnd.generalMessage = 'No one was hanged.';
+        this.monitorMessage.dayEnd.generalMessage = 'No one was hanged today.';
       }
     });
     this.$store.getters['socket/getUserSocket'].on('countDown', (count) => {
