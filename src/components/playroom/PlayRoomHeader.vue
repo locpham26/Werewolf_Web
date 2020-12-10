@@ -9,10 +9,8 @@
 
     <div :style="{marginTop: !isGameStarted && 'auto'}" id="monitor">
       <div v-if="isGameStarted" class="fl-center">
-        <div class="box-gray" v-show="gameTurn !== 'dayStart' && 'dayEnd' && 'nightStart'
-        && 'gameStart' && 'gameEnd'">{{ countdown }}s</div>
-        <p>{{ night }}</p>
-        <p>{{ gameTurn }}</p>
+        <div class="box-gray" v-show="showClock">{{ countdown }}s</div>
+        <p v-show="showNightMessage">{{ nightMessage }}</p>
       </div>
       <div v-if="isGameStarted && gameTurn !== ''" class="box-gray">
         {{ gameTurn === userInfo.role ?
@@ -53,30 +51,30 @@ export default {
   data() {
     return {
       countdown: '',
-      night: 'Second Day',
+      night: 0,
       monitorMessage: {
         gameStart: {
           generalMessage: 'The game has started. You have been assigned a role. The first night will come soon. Be prepared.',
         },
         villager: {
-          roleMessage: 'Everyone!! A new day has come. Discuss with other and vote someone to be hanged.',
-          generalMessage: 'Everyone!! A new day has come. Discuss with other and vote someone to be hanged.',
+          roleMessage: 'Everyone!! Discuss with other and vote someone to be hanged.',
+          generalMessage: 'Everyone!! Discuss with other and vote someone to be hanged.',
         },
         guard: {
           roleMessage: 'Wake up guard!! Choose anyone to protect from being killed',
-          generalMessage: 'It\'s guard\'s turn',
+          generalMessage: 'It\'s guard\'s turn.',
         },
         wolf: {
           roleMessage: 'Wake up wolves!! Discuss with other wolves and kill someone tonight.',
-          generalMessage: 'It\'s wolf\'s turn',
+          generalMessage: 'It\'s wolf\'s turn.',
         },
         seer: {
           roleMessage: 'Wake up seer!! Check someone\'s role.',
-          generalMessage: 'It\'s seer\'s turn',
+          generalMessage: 'It\'s seer\'s turn.',
         },
         witch: {
           roleMessage: 'Wake up witch!! Tonight, the wolves failed to kill anyone. You can poison someone.',
-          generalMessage: 'It\'s witch\'s turn',
+          generalMessage: 'It\'s witch\'s turn.',
         },
         hunterDay: {
           roleMessage: 'Hunter!! Shoot someone before you die.',
@@ -99,7 +97,7 @@ export default {
           generalMessage: '',
         },
         nightStart: {
-          generalMessage: 'The night has come.',
+          generalMessage: 'The night is coming.',
         },
         gameEnd: {
           generalMessage: '',
@@ -109,6 +107,39 @@ export default {
         },
       },
     };
+  },
+  computed: {
+    showClock() {
+      return !['dayStart', 'dayEnd', 'gameStart', 'gameEnd'].includes(this.gameTurn);
+    },
+    showNightMessage() {
+      return !['dayStart', 'dayEnd', 'gameStart', 'gameEnd', 'villager'].includes(this.gameTurn);
+    },
+    nightMessage() {
+      switch (this.night) {
+        case 1:
+          return 'First Night';
+        case 2:
+          return 'Second Night';
+        case 3:
+          return 'Third Night';
+        case 4:
+          return 'Fourth Night';
+        case 5:
+          return 'Fifth Night';
+        case 6:
+          return 'Sixth Night';
+        case 7:
+          return 'Seventh Night';
+        default:
+          return '';
+      }
+    },
+  },
+  watch: {
+    gameTurn(value) {
+      if (value === 'nightStart') this.night += 1;
+    },
   },
   mounted() {
     this.$store.getters['socket/getUserSocket'].on('hang', (hangedPlayer) => {
@@ -127,21 +158,21 @@ export default {
     });
     this.$store.getters['socket/getUserSocket'].on('kill', ({ killedPlayer, poisonedPlayer }) => {
       if (killedPlayer !== '' && poisonedPlayer === '') {
-        this.monitorMessage.dayStart.generalMessage = (killedPlayer === this.userInfo.name) ? 'You were killed by the wolves.' : `${killedPlayer} was killed by the wolves.`;
+        this.monitorMessage.dayStart.generalMessage = (killedPlayer === this.userInfo.name) ? 'A new day has come. Last night, you were killed by the wolves.' : `${killedPlayer} was killed by the wolves.`;
       } else if (killedPlayer === '' && poisonedPlayer !== '') {
-        this.monitorMessage.dayStart.generalMessage = (poisonedPlayer === this.userInfo.name) ? 'You were killed by the witch.' : `${poisonedPlayer} was poisoned by the witch.`;
+        this.monitorMessage.dayStart.generalMessage = (poisonedPlayer === this.userInfo.name) ? 'A new day has come. Last night, you were poisoned by the witch.' : `${poisonedPlayer} was poisoned by the witch.`;
       } else if (killedPlayer !== '' && poisonedPlayer !== '') {
         if (poisonedPlayer === this.userInfo.name && killedPlayer === this.userInfo.name) {
-          this.monitorMessage.dayStart.generalMessage = 'You were killed by the wolves and poisoned by the witch. Sorry!!';
+          this.monitorMessage.dayStart.generalMessage = 'A new day has come. Last night, you were killed by the wolves and poisoned by the witch. Sorry!!';
         } else if (poisonedPlayer === this.userInfo.name && killedPlayer !== this.userInfo.name) {
-          this.monitorMessage.dayStart.generalMessage = `You were poisoned by the witch. ${killedPlayer} was killed by the wolves.`;
+          this.monitorMessage.dayStart.generalMessage = `A new day has come. Last night, you were poisoned by the witch, and ${killedPlayer} was killed by the wolves.`;
         } else if (killedPlayer === this.userInfo.name && poisonedPlayer !== this.userInfo.name) {
-          this.monitorMessage.dayStart.generalMessage = `You were killed by the wolves. ${poisonedPlayer} was poisoned by the witch.`;
+          this.monitorMessage.dayStart.generalMessage = `A new day has come. Last night, you were killed by the wolves, and ${poisonedPlayer} was poisoned by the witch.`;
         } else {
-          this.monitorMessage.dayStart.generalMessage = `${killedPlayer} was killed by the wolves. ${poisonedPlayer} was poisoned by the witch.`;
+          this.monitorMessage.dayStart.generalMessage = `A new day has come. Last night, ${killedPlayer} was killed by the wolves, and ${poisonedPlayer} was poisoned by the witch.`;
         }
       } else {
-        this.monitorMessage.dayStart.generalMessage = 'It was a peaceful night. No one lost their lives.';
+        this.monitorMessage.dayStart.generalMessage = 'A new day has come. Last night, no one lost their lives.';
       }
     });
     this.$store.getters['socket/getUserSocket'].on('lastProtected', (protectedPlayer) => {
@@ -227,6 +258,8 @@ export default {
 
 #monitor > .fl-center > .box-gray {
   margin-left: calc(50% - 21px);
+  width: 15px;
+  text-align: center;
 }
 
 #monitor > .fl-center > p:nth-child(2) {

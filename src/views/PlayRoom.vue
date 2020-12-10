@@ -17,7 +17,8 @@
     <div class="left-panel" v-if="!gameInfo.started"><PlayRoomFriendList /></div>
     <PlayRoomPlayerList :players="gameInfo.players" :userInfo="userInfo"
     :selectable="selectable" :gameTurn="gameInfo.turn"
-    :isDay="gameInfo.started && gameInfo.turn === 'dayStart' || gameInfo.turn ==='villager'" />
+    :isDay="gameInfo.started && gameInfo.turn === 'dayStart' || gameInfo.turn ==='villager' ||
+    gameInfo.turn === 'dayEnd'" />
     <PlayRoomChatbox
       :isGameStarted="gameInfo.started"
       :messages="messages"
