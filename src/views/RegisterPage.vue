@@ -1,15 +1,25 @@
 <template>
-  <div>
-    <register-form></register-form>
+  <div v-if="!hasVerified">
+    <email-form></email-form>
+  </div>
+  <div v-else>
+    <user-info-form></user-info-form>
   </div>
 </template>
 
 <script>
-import RegisterForm from '@/components/register/RegisterForm.vue';
+import EmailForm from '@/components/register/EmailForm.vue';
+import UserInfoForm from '@/components/register/UserInfoForm.vue';
 
 export default {
   components: {
-    RegisterForm,
+    EmailForm,
+    UserInfoForm,
+  },
+  data() {
+    return {
+      hasVerified: true,
+    };
   },
 };
 </script>
