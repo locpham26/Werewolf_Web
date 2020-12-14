@@ -1,19 +1,30 @@
 <template>
-  <div class="box-dark d-fl" @click="selectTarget(name)"
-  :class="{'selectable': selectable && !isDead, 'is-dead': isDead}">
-    <img :src="isDead ?
-    require('@/assets/img/grave.png') :
-    require('@/assets/img/' + avatar + '.png')" />
+  <div
+    class="box-dark d-fl"
+    @click="selectTarget(name)"
+    :class="{'selectable': selectable && !isDead, 'is-dead': isDead}"
+  >
+    <img
+      :src="isDead
+      ? require('@/assets/img/grave.png')
+      : require('@/assets/img/' + avatar + '.png')"
+    />
     <div class="player-info">
       <div :class="{'align-l': true, wolf: isWolf, me: isMe}">{{ name }}</div>
       <div class="vote-container d-fl">
         <div v-for="player in votes" :key="name + '-' + player">
-          <img class="vote-avatar"
-          :src="require('@/assets/img/' + player + '.png')"
-          v-show="visibleVote" />
+          <img
+            class="vote-avatar"
+            :src="require('@/assets/img/' + player + '.png')"
+            v-show="visibleVote"
+          />
         </div>
-        <div v-show="checkRole.isChecking && name === checkRole.target"
-        :class="{'wolf': role==='wolf', 'not-wolf': role!=='wolf'}">{{checkRole.message}}</div>
+        <div
+          v-show="checkRole.isChecking && name === checkRole.target"
+          :class="{'wolf': role==='wolf', 'not-wolf': role!=='wolf'}"
+        >
+          {{checkRole.message}}
+        </div>
       </div>
     </div>
   </div>
@@ -22,7 +33,18 @@
 <script>
 export default {
   name: 'PlayRoomPlayerListItem',
-  props: ['avatar', 'name', 'role', 'votes', 'isMe', 'isWolf', 'selectable', 'visibleVote', 'isDead', 'checkRole'],
+  props: [
+    'avatar',
+    'name',
+    'role',
+    'votes',
+    'isMe',
+    'isWolf',
+    'selectable',
+    'visibleVote',
+    'isDead',
+    'checkRole',
+  ],
   inject: ['selectTarget'],
 };
 </script>

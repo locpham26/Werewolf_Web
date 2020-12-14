@@ -26,7 +26,10 @@
       :userInfo="userInfo"
     />
   </div>
-  <PlayRoomRoleList :playerNum="gameInfo.players.length" />
+  <PlayRoomRoleList
+    :playerNum="gameInfo.players.length"
+    :isGameStarted="gameInfo.started"
+  />
   </div>
 </template>
 

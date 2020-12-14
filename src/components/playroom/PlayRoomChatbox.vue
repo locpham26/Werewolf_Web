@@ -24,7 +24,7 @@
           {{ channel }}
         </option>
       </select>
-      <input class="box-gray" @keydown="send" required v-model="sentMessage"/>
+      <input type="text" class="box-gray" @keydown="send" required v-model="sentMessage"/>
     </div>
   </div>
 </template>
@@ -113,10 +113,11 @@ select > option {
 
 input {
   width: 100%;
-  border-top-left-radius: 0;
-  border-bottom-left-radius: 0;
+  border-top-left-radius: 0 !important;
+  border-bottom-left-radius: 0 !important;
   box-shadow: 0;
-  border: 0.5px solid rgb(133, 133, 133) !important;;
+  border: 0.5px solid rgb(133, 133, 133) !important;
+  border-left: none !important;
 }
 
 select:active, select:focus {

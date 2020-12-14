@@ -36,7 +36,7 @@ span:nth-child(2) {
 }
 
 .admin-message {
-  color: magenta;
+  color: $pink;
 }
 
 .wolf-message {
