@@ -1,5 +1,5 @@
 <template>
-  <div class="fl-center">
+  <div class="fl-center" v-if="isGameStarted">
     <div
       v-for="role in usedRoles"
       :key="role.name"

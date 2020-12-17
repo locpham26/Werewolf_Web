@@ -22,8 +22,10 @@
           v-if="isHost && !isGameStarted"
           :disabled="playerNum < 3"
           @click="start"
-          class="red-text"
-        >START</button>
+          id="start-button"
+        >
+          START
+        </button>
         <p>Player: {{ playerNum }}/12</p>
       </div>
     </div>
@@ -35,7 +37,7 @@
         :src="isGameStarted ?
         require('@/assets/img/' + userInfo.role + '.png') :
         require('@/assets/img/villager.png')"/>
-        <p :class="['my-role',{'red-text': userInfo.role === 'wolf'}]">
+        <p :class="['my-role', {'red-text': userInfo.role === 'wolf'}]">
           You're {{ userInfo.role }}
         </p>
       </div>
@@ -291,7 +293,11 @@ p {
   text-align: center;
 }
 
-.red-text {
+.red-text, #start-button:hover {
   color: $red;
+}
+
+#start-button {
+  color: $white;
 }
 </style>
