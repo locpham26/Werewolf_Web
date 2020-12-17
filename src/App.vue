@@ -18,10 +18,7 @@
 
 body {
   height: 100%;
-  background: url("./assets/img/werewolf.jpg");
-  background-attachment: fixed;
-  background-repeat: no-repeat;
-  background-size: 100% 100%;
+  width: 100%;
   font-family: $font-regular;
   margin: 0;
 }

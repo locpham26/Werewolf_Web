@@ -4,6 +4,7 @@
       v-for="role in usedRoles"
       :key="role.name"
       class="box-gray"
+      :class="{'night': !isDay}"
     >
       <PlayRoomRoleListItem
         :name="role.name"
@@ -20,7 +21,7 @@ import PlayRoomRoleListItem from './PlayRoomRoleListItem';
 
 export default {
   name: 'PlayRoomRoleList',
-  props: ['playerNum'],
+  props: ['playerNum', 'isDay'],
   components: {
     PlayRoomRoleListItem,
   },
@@ -108,12 +109,16 @@ export default {
   position: relative;
   width: 4rem;
   height: 4rem;
-  border: 1px solid blue;
+  border: 1px solid $orange;
   padding: 10px;
   margin-left: 5px;
   margin-right: 5px;
   margin-top: auto;
   flex-shrink: 0;
+}
+
+.night {
+  border: 1px solid blue;
 }
 
 </style>

@@ -73,7 +73,7 @@ export default {
 @import '@/assets/styles/_base';
 
 .box-dark {
-  width: 18%;
+  width: 25%;
   // min-height: 28rem;
   box-sizing: border-box;
   -moz-box-sizing: border-box;
@@ -116,7 +116,7 @@ input {
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
   box-shadow: 0;
-  border: 0.5px solid rgb(133, 133, 133) !important;;
+  border: 0.5px solid !important;;
 }
 
 select:active, select:focus {

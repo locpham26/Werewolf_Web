@@ -3,7 +3,7 @@ const validateEmailFormat = (email) => {
   const result = { isValid: true, errorMessage: '' };
   if (email === '') {
     result.isValid = false;
-    result.errorMessage = 'Email cannot be empty';
+    result.errorMessage = 'Email cannot be empty.';
   } else if (!email.match(mailFormat)) {
     result.isValid = false;
     result.errorMessage = 'Please enter a valid email. For example sam@domain.com';

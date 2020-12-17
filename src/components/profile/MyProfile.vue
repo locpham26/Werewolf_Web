@@ -29,7 +29,7 @@ export default {
 
 .box-gray {
   width: 45rem;
-  padding: 2rem;
+  padding: 2rem !important;
   height: 30rem;
 }
 .profile-container {

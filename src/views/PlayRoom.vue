@@ -1,5 +1,5 @@
 <template>
-<div class="playroom-container">
+<div class="playroom-container" :class="{'night': !isDay}">
   <PlayRoomHeader
     :isGameStarted="gameInfo.started"
     :gameTurn="gameInfo.turn"
@@ -10,29 +10,23 @@
     :start="startGame"
   />
   <div id="playroom-body" class="fl-center">
-    <div class="left-panel" v-if="gameInfo.started" >
-      <PlayRoomActionList :playerRole="userInfo.role"
-      :gameTurn="gameInfo.turn" :userName="userInfo.name" />
-    </div>
-    <div class="left-panel" v-if="!gameInfo.started"><PlayRoomFriendList /></div>
     <PlayRoomPlayerList :players="gameInfo.players" :userInfo="userInfo"
-    :selectable="selectable" :gameTurn="gameInfo.turn"
-    :isDay="gameInfo.started && gameInfo.turn === 'dayStart' || gameInfo.turn ==='villager' ||
-    gameInfo.turn === 'dayEnd'" />
+    :gameTurn="gameInfo.turn" />
     <PlayRoomChatbox
       :isGameStarted="gameInfo.started"
       :messages="messages"
       :sendMessage="sendMessage"
       :userInfo="userInfo"
+      :isDay="isDay"
     />
   </div>
-  <PlayRoomRoleList :playerNum="gameInfo.players.length" />
+  <!-- <div class="left-panel" v-if="!gameInfo.started"><PlayRoomFriendList /></div> -->
+  <PlayRoomRoleList :playerNum="gameInfo.players.length" :isDay="isDay" />
   </div>
 </template>
 
 <script>
-import PlayRoomFriendList from '@/components/playroom/PlayRoomFriendList';
-import PlayRoomActionList from '@/components/playroom/PlayRoomActionList';
+// import PlayRoomFriendList from '@/components/playroom/PlayRoomFriendList';
 import PlayRoomChatbox from '@/components/playroom/PlayRoomChatbox';
 import PlayRoomHeader from '@/components/playroom/PlayRoomHeader';
 import PlayRoomPlayerList from '@/components/playroom/PlayRoomPlayerList';
@@ -41,8 +35,7 @@ import PlayRoomRoleList from '@/components/playroom/PlayRoomRoleList';
 export default {
   name: 'PlayRoom',
   components: {
-    PlayRoomFriendList,
-    PlayRoomActionList,
+    // PlayRoomFriendList,
     PlayRoomChatbox,
     PlayRoomHeader,
     PlayRoomPlayerList,
@@ -73,10 +66,8 @@ export default {
       }
       return false;
     },
-    selectable() {
-      return this.pendingAction.type !== ''
-      && this.pendingAction.target === ''
-      && (this.gameInfo.turn.slice(0, this.userInfo.role.length) === this.userInfo.role || this.gameInfo.turn === 'villager');
+    isDay() {
+      return !this.gameInfo.started || ['dayStart', 'villager', 'dayEnd', 'gameStart', 'gameEnd'].includes(this.gameInfo.turn);
     },
   },
   methods: {
@@ -114,23 +105,6 @@ export default {
         this.pendingAction.type = actionType;
       }
     },
-    chooseTarget(targetName) {
-      this.pendingAction.target = targetName;
-      this.$store.getters['socket/getUserSocket'].emit('playerAction', {
-        from: this.userInfo.name,
-        target: this.pendingAction.target,
-        type: this.pendingAction.type,
-        roomId: this.$route.params.id,
-      });
-      this.pendingAction.type = '';
-      this.pendingAction.target = '';
-    },
-  },
-  provide() {
-    return {
-      invokeAction: this.callAction,
-      selectTarget: this.chooseTarget,
-    };
   },
   mounted() {
     this.$store.getters['socket/getUserSocket'].on('roomPlayer', (room) => {
@@ -145,7 +119,6 @@ export default {
     });
 
     this.$store.getters['socket/getUserSocket'].on('changeTurn', (data) => {
-      console.log(data.roomTurn);
       this.gameInfo.turn = data.roomTurn;
       if (this.userInfo.name === this.gameInfo.players[0].name) {
         this.$store.getters['socket/getUserSocket'].emit('turnChange', { roomId: this.$route.params.id, skipped: data.skipped });
@@ -160,14 +133,25 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import '@/assets/styles/_base';
 
 .playroom-container {
   width: 100%;
   height: 100%;
+  background: url("../assets/img/day7.jpg");
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+}
+
+.night {
+  background: url("../assets/img/night1.jpg");
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
 }
 
 #playroom-body {
-  // min-height: 28rem;
   min-height: 60%;
   align-items: stretch;
   justify-content: space-between;

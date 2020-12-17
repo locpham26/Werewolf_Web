@@ -4,7 +4,6 @@
       <button class="box-gray d-fl">
         <img @click="leave" :src="require('@/assets/img/close.svg')" />
       </button>
-      <div v-if="isGameStarted">Room ID: {{ $route.params.id }}</div>
     </div>
 
     <div :style="{marginTop: !isGameStarted && 'auto'}" id="monitor">
@@ -57,8 +56,8 @@ export default {
           generalMessage: 'The game has started. You have been assigned a role. The first night will come soon. Be prepared.',
         },
         villager: {
-          roleMessage: 'Everyone!! Discuss with other and vote someone to be hanged.',
-          generalMessage: 'Everyone!! Discuss with other and vote someone to be hanged.',
+          roleMessage: 'Everyone!! Discuss with others and vote someone to be hanged.',
+          generalMessage: 'Everyone!! Discuss with others and vote someone to be hanged.',
         },
         guard: {
           roleMessage: 'Wake up guard!! Choose anyone to protect from being killed',
@@ -139,6 +138,7 @@ export default {
   watch: {
     gameTurn(value) {
       if (value === 'nightStart') this.night += 1;
+      if (value === 'gameStart') this.night = 0;
     },
   },
   mounted() {
@@ -216,7 +216,6 @@ export default {
 #button-container {
   align-items: center;
   color: $white;
-  width: 15%;
   margin-bottom: auto;
 }
 
@@ -252,6 +251,10 @@ export default {
   width: 60%;
 }
 
+#monitor > .box-gray {
+  font-size: 1.1rem;
+}
+
 #monitor > .fl-center {
   margin-bottom: 5px;
 }
@@ -263,7 +266,7 @@ export default {
 }
 
 #monitor > .fl-center > p:nth-child(2) {
-  font-size: 1.3rem;
+  font-size: 1.5rem;
   font-family: $font-bold;
 }
 

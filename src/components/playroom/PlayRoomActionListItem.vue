@@ -1,5 +1,5 @@
 <template>
-  <div class="box-dark" :class="{'disabled': notAvailable}" @click="invokeAction(action)">
+  <div class="action" :class="{'disabled': notAvailable}" @click="sendAction()">
     {{ action }}
   </div>
 </template>
@@ -7,22 +7,35 @@
 <script>
 export default {
   name: 'PlayRoomActionListItem',
-  props: ['action', 'notAvailable'],
-  inject: ['invokeAction'],
+  props: ['action', 'notAvailable', 'committer', 'target'],
+  methods: {
+    sendAction() {
+      console.log(this.committer, this.action, this.target);
+      this.$store.getters['socket/getUserSocket'].emit('playerAction', {
+        from: this.committer,
+        target: this.target,
+        type: this.action,
+        roomId: this.$route.params.id,
+      });
+    },
+  },
 };
 </script>
 
 <style lang="scss" scoped>
 @import '@/assets/styles/_base';
 
-.box-dark {
-  width: 100%;
-  box-sizing: border-box;
-  margin-bottom: 5px;
+.action {
+  @extend .box-white;
+  color: $gray;
+  width: 50%;
+  padding: 10px;
+  font-size: 1rem;
+  margin-right: 5px;
   text-transform: capitalize;
-  cursor: pointer;
   &:hover {
-    background-color: $light;
+    cursor: pointer;
+    background-color: $white;
     color: $black;
   }
 }

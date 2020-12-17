@@ -1,17 +1,14 @@
 <template>
-  <div id="playroom-player-list" class="box-gray" :class="{'day' : isDay}">
+  <div id="playroom-player-list" class="box-gray"
+  :class="{'my-turn': myTurn, 'villager': gameTurn === 'villager'}">
       <PlayRoomPlayerListItem
         v-for="(player, i) in players" :key="i"
         :avatar="avatars[i]"
-        :name="player.name"
-        :role="player.role"
+        :playerInfo="player"
+        :userInfo="userInfo"
         :votes="getVoteAvatars(player.votes)"
-        :isMe="player.name === userInfo.name"
-        :isWolf="player.role === 'wolf' && userInfo.role === 'wolf'"
-        :selectable="selectable"
-        :visibleVote="visibleVote"
         :checkRole="checkRole"
-        :isDead="!player.isAlive" />
+        :gameTurn="gameTurn" />
   </div>
 </template>
 
@@ -20,7 +17,7 @@ import PlayRoomPlayerListItem from './PlayRoomPlayerListItem';
 
 export default {
   name: 'PlayRoomPlayerList',
-  props: ['players', 'userInfo', 'selectable', 'isDay', 'gameTurn'],
+  props: ['players', 'userInfo', 'gameTurn'],
   components: { PlayRoomPlayerListItem },
   data() {
     return {
@@ -51,8 +48,8 @@ export default {
     },
   },
   computed: {
-    visibleVote() {
-      return this.isDay || this.userInfo.role === 'wolf';
+    myTurn() {
+      return this.userInfo.role !== '' && (this.gameTurn.slice(0, this.userInfo.role.length) === this.userInfo.role);
     },
   },
   watch: {
@@ -73,8 +70,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import '@/assets/styles/_base';
+
 #playroom-player-list {
-  width: 60%;
+  width: 73%;
   box-sizing: border-box;
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
@@ -85,7 +84,11 @@ export default {
   row-gap: 15px;
 }
 
-.day {
+.my-turn {
+  background-color: rgba(13, 212, 238, 0.4) !important;
+}
+
+.villager {
   background-color: rgba(255, 194, 102, 0.4) !important;
 }
 

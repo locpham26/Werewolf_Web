@@ -39,7 +39,7 @@ img {
 .box-gray {
   width: 4rem;
   height: 4rem;
-  border: 1px solid blue;
+  border: 1px solid $orange;
   padding: 10px;
   margin-left: 5px;
   margin-right: 5px;

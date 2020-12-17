@@ -37,6 +37,7 @@ span:nth-child(2) {
 
 .admin-message {
   color: magenta;
+  font-family: $font-bold;
 }
 
 .wolf-message {
