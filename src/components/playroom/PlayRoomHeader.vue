@@ -12,7 +12,7 @@
         <p v-show="showNightMessage">{{ nightMessage }}</p>
       </div>
       <div v-if="isGameStarted && gameTurn !== ''" class="box-gray">
-        {{ gameTurn === userInfo.role ?
+        {{ gameTurn.slice(0, userInfo.role.length) === userInfo.role ?
         monitorMessage[gameTurn].roleMessage :
         monitorMessage[gameTurn].generalMessage }}
       </div>
@@ -81,14 +81,14 @@ export default {
           roleMessage: 'Hunter!! Shoot someone before you die.',
           generalMessage: 'Hunter is deciding who to shoot.',
         },
-        hunterShootDay: {
+        shootDay: {
           generalMessage: 'No one was shot by the hunter.',
         },
         hunterNight: {
           roleMessage: 'Hunter!! Shoot someone before you die.',
           generalMessage: 'Hunter is deciding who to shoot.',
         },
-        hunterShootNight: {
+        shootNight: {
           generalMessage: 'No one was shot by the hunter.',
         },
         dayStart: {
@@ -195,10 +195,10 @@ export default {
       }
     });
     this.$store.getters['socket/getUserSocket'].on('hunterShoot', (shotPlayer) => {
-      if (this.gameTurn === 'hunterShootDay') {
-        this.monitorMessage.hunterShootDay.generalMessage = (shotPlayer === this.userInfo.name) ? 'You were shot by the hunter.' : `${shotPlayer} was shot by the hunter.`;
-      } else if (this.gameTurn === 'hunterShootNight') {
-        this.monitorMessage.hunterShootNight.generalMessage = (shotPlayer === this.userInfo.name) ? 'You were shot by the hunter.' : `${shotPlayer} was shot by the hunter.`;
+      if (this.gameTurn === 'hunterDay') {
+        this.monitorMessage.shootDay.generalMessage = (shotPlayer === this.userInfo.name) ? 'You were shot by the hunter.' : `${shotPlayer} was shot by the hunter.`;
+      } else if (this.gameTurn === 'hunterNight') {
+        this.monitorMessage.shootNight.generalMessage = (shotPlayer === this.userInfo.name) ? 'You were shot by the hunter.' : `${shotPlayer} was shot by the hunter.`;
       }
     });
     this.$store.getters['socket/getUserSocket'].on('killedByWolf', (killedPlayer) => {

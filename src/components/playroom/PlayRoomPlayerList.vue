@@ -8,7 +8,8 @@
         :userInfo="userInfo"
         :votes="getVoteAvatars(player.votes)"
         :checkRole="checkRole"
-        :gameTurn="gameTurn" />
+        :gameTurn="gameTurn"
+        :myTurn="myTurn" />
   </div>
 </template>
 

@@ -17,17 +17,21 @@
           :class="{'wolf': playerInfo.role==='wolf', 'not-wolf': playerInfo.role !=='wolf'}">
           {{checkRole.message}}
         </div>
+        <div v-for="effect in effects" :key="effect">
+          <img class="effect-container"
+          :src="require('@/assets/img/' + effect + '.svg')" v-show="myTurn" />
+        </div>
       </div>
     </div>
-    <div class="action-container" v-if="actionHover && gameTurn === 'villager'">
+    <div class="action-container" v-if="actionHover && gameTurn === 'villager' && userInfo.isAlive">
       <play-room-action-list-item :action="dayAction" :target="playerInfo.name"
       :committer="userInfo.name" :notAvailable="checkAvailability(dayAction)">
       </play-room-action-list-item>
     </div>
-    <div class="action-container" v-if="actionHover && gameTurn === userInfo.role">
+    <div class="action-container" v-if="actionHover && myTurn && userInfo.isAlive">
       <play-room-action-list-item v-for="action in roleActions[userInfo.role]" :key="action"
       :action="action" :target="playerInfo.name" :committer="userInfo.name"
-      :notAvailable="checkAvailability(action)">
+      :notAvailable="checkAvailability(action)" @triggereffect="addEffect">
       </play-room-action-list-item>
     </div>
   </div>
@@ -39,7 +43,7 @@ import PlayRoomActionListItem from './PlayRoomActionListItem';
 export default {
   name: 'PlayRoomPlayerListItem',
   components: { PlayRoomActionListItem },
-  props: ['avatar', 'playerInfo', 'userInfo', 'votes', 'gameTurn', 'checkRole'],
+  props: ['avatar', 'playerInfo', 'userInfo', 'votes', 'gameTurn', 'checkRole', 'myTurn'],
   data() {
     return {
       actionHover: false,
@@ -53,6 +57,7 @@ export default {
         villager: [],
       },
       disabledActions: [],
+      effects: [],
     };
   },
   methods: {
@@ -66,6 +71,9 @@ export default {
           this.disabledActions.splice(actionIndex, 1);
         }
       });
+    },
+    addEffect(effect) {
+      this.effects.push(effect);
     },
   },
   computed: {
@@ -89,6 +97,7 @@ export default {
     gameTurn(value) {
       if (value === 'dayStart') {
         this.removeFromDisabledList(['protect', 'check', 'kill', 'skip']);
+        this.effects = [];
       } else if (value === 'dayEnd') {
         this.removeFromDisabledList(['skip', 'vote']);
       }
@@ -135,6 +144,12 @@ export default {
 .vote-avatar {
   width: 0.7rem;
   height: 1rem;
+  margin-right: 5px;
+}
+
+.effect-container {
+  width: 1.2rem;
+  height: 1.2rem;
   margin-right: 5px;
 }
 

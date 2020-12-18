@@ -10,13 +10,15 @@ export default {
   props: ['action', 'notAvailable', 'committer', 'target'],
   methods: {
     sendAction() {
-      console.log(this.committer, this.action, this.target);
       this.$store.getters['socket/getUserSocket'].emit('playerAction', {
         from: this.committer,
         target: this.target,
         type: this.action,
         roomId: this.$route.params.id,
       });
+      if (['poison', 'save', 'protect', 'shoot'].includes(this.action)) {
+        this.$emit('triggereffect', this.action);
+      }
     },
   },
 };

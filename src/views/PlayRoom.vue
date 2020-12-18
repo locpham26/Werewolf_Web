@@ -53,6 +53,7 @@ export default {
       userInfo: {
         name: this.$store.getters['auth/getUserName'],
         role: '',
+        isAlive: true,
       },
       pendingAction: {
         type: '',
@@ -68,7 +69,7 @@ export default {
       return false;
     },
     isDay() {
-      return !this.gameInfo.started || ['dayStart', 'villager', 'dayEnd', 'gameStart', 'gameEnd'].includes(this.gameInfo.turn);
+      return !this.gameInfo.started || ['dayStart', 'villager', 'dayEnd', 'gameStart', 'gameEnd', 'hunterDay', 'shootDay', 'hunterNight', 'shootNight'].includes(this.gameInfo.turn);
     },
   },
   methods: {
@@ -108,7 +109,7 @@ export default {
         (player) => player.name === this.userInfo.name,
       );
       this.userInfo.role = me.role;
-      this.userInfo.actions = me.actions;
+      this.userInfo.isAlive = me.isAlive;
     });
 
     this.$store.getters['socket/getUserSocket'].on('changeTurn', (data) => {
