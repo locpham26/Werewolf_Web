@@ -21,7 +21,7 @@ import PlayRoomRoleListItem from './PlayRoomRoleListItem';
 
 export default {
   name: 'PlayRoomRoleList',
-  props: ['playerNum', 'isDay'],
+  props: ['playerNum', 'isDay', 'isGameStarted'],
   components: {
     PlayRoomRoleListItem,
   },

@@ -14,14 +14,15 @@
     :gameTurn="gameInfo.turn" />
     <PlayRoomChatbox
       :isGameStarted="gameInfo.started"
-      :messages="messages"
-      :sendMessage="sendMessage"
       :userInfo="userInfo"
       :isDay="isDay"
     />
   </div>
   <!-- <div class="left-panel" v-if="!gameInfo.started"><PlayRoomFriendList /></div> -->
-  <PlayRoomRoleList :playerNum="gameInfo.players.length" :isDay="isDay" />
+  <PlayRoomRoleList
+    :playerNum="gameInfo.players.length"
+    :isDay="isDay"
+    :isGameStarted="gameInfo.started" />
   </div>
 </template>
 
@@ -79,14 +80,6 @@ export default {
       }
       this.$router.push('/homepage');
     },
-    sendMessage(sentMessage, isFromWolf) {
-      this.$store.getters['socket/getUserSocket'].emit('sendMessage', {
-        userName: this.userInfo.name,
-        text: sentMessage,
-        isFromWolf,
-        roomId: this.$route.params.id,
-      });
-    },
     startGame() {
       this.$store.getters['socket/getUserSocket'].emit('start', { roomId: this.$route.params.id });
     },
@@ -123,10 +116,6 @@ export default {
       if (this.userInfo.name === this.gameInfo.players[0].name) {
         this.$store.getters['socket/getUserSocket'].emit('turnChange', { roomId: this.$route.params.id, skipped: data.skipped });
       }
-    });
-
-    this.$store.getters['socket/getUserSocket'].on('message', (message) => {
-      this.messages.push(message);
     });
   },
 };

@@ -132,6 +132,16 @@ export default {
           return 'Sixth Night';
         case 7:
           return 'Seventh Night';
+        case 8:
+          return 'Eigth Night';
+        case 9:
+          return 'Ninth Night';
+        case 10:
+          return 'Tenth Night';
+        case 11:
+          return 'Eleventh Night';
+        case 12:
+          return 'Twelfth Night';
         default:
           return '';
       }

@@ -13,7 +13,7 @@
       </div>
     </div>
     <div class="chatbox-input d-fl">
-      <select class="box-gray" v-show="isGameStarted" v-model="activeChannel"
+      <select class="box-gray" v-model="activeChannel"
       :class="{'wolf': activeChannel === 'wolf'}">
         <option
           v-for="channel in availableChannel"
@@ -35,21 +35,15 @@ import PlayRoomChatboxItem from './PlayRoomChatboxItem';
 export default {
   name: 'PlayRoomChatbox',
   components: { PlayRoomChatboxItem },
-  props: ['messages', 'sendMessage', 'isGameStarted', 'userInfo'],
+  props: ['isGameStarted', 'userInfo'],
   data() {
     return {
+      wolfMessages: [],
+      generalMessages: [],
       sentMessage: '',
       availableChannel: ['all', 'wolf'],
       activeChannel: 'all',
     };
-  },
-  computed: {
-    wolfMessages() {
-      return this.messages.filter((message) => message.isFromWolf === true);
-    },
-    generalMessages() {
-      return this.messages.filter((message) => message.isFromWolf === false);
-    },
   },
   methods: {
     send(e) {
@@ -62,9 +56,34 @@ export default {
         this.sentMessage = '';
       }
     },
+    sendMessage(sentMessage, isFromWolf) {
+      this.$store.getters['socket/getUserSocket'].emit('sendMessage', {
+        userName: this.userInfo.name,
+        text: sentMessage,
+        isFromWolf,
+        roomId: this.$route.params.id,
+      });
+    },
     checkWolfChannel(channel) {
       return channel !== 'wolf' || (channel === 'wolf' && this.userInfo.role === 'wolf');
     },
+  },
+  watch: {
+    isGameStarted(value) {
+      if (!value) {
+        this.activeChannel = 'all';
+        this.wolfMessages = [];
+      }
+    },
+  },
+  mounted() {
+    this.$store.getters['socket/getUserSocket'].on('message', (message) => {
+      if (message.isFromWolf) {
+        this.wolfMessages.push(message);
+      } else {
+        this.generalMessages.push(message);
+      }
+    });
   },
 };
 </script>
