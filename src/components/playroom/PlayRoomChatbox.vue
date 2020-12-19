@@ -1,5 +1,7 @@
 <template>
-  <div class="box-dark d-fl">
+  <div class="box-dark d-fl"
+    :style="{width: isGameStarted ? '35%' : '22%'}"
+  >
     <div class="chat-container" v-if="activeChannel === 'all'">
       <div v-for="(mess, i) in generalMessages" :key="i">
         <PlayRoomChatboxItem :name="mess.userName" :message="mess.text"
@@ -92,7 +94,6 @@ export default {
 @import '@/assets/styles/_base';
 
 .box-dark {
-  width: 25%;
   // min-height: 28rem;
   box-sizing: border-box;
   -moz-box-sizing: border-box;

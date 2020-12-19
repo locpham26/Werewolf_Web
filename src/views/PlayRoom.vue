@@ -10,15 +10,19 @@
     :start="startGame"
   />
   <div id="playroom-body" class="fl-center">
-    <PlayRoomPlayerList :players="gameInfo.players" :userInfo="userInfo"
-    :gameTurn="gameInfo.turn" />
+    <div class="left-panel" v-if="!gameInfo.started"><PlayRoomFriendList /></div>
+    <PlayRoomPlayerList
+      :players="gameInfo.players"
+      :userInfo="userInfo"
+      :gameTurn="gameInfo.turn"
+      :isGameStarted="gameInfo.started"
+    />
     <PlayRoomChatbox
       :isGameStarted="gameInfo.started"
       :userInfo="userInfo"
       :isDay="isDay"
     />
   </div>
-  <!-- <div class="left-panel" v-if="!gameInfo.started"><PlayRoomFriendList /></div> -->
   <PlayRoomRoleList
     :playerNum="gameInfo.players.length"
     :isDay="isDay"
@@ -27,7 +31,8 @@
 </template>
 
 <script>
-// import PlayRoomFriendList from '@/components/playroom/PlayRoomFriendList';
+// eslint-disable-next-line no-unused-vars
+import PlayRoomFriendList from '@/components/playroom/PlayRoomFriendList';
 import PlayRoomChatbox from '@/components/playroom/PlayRoomChatbox';
 import PlayRoomHeader from '@/components/playroom/PlayRoomHeader';
 import PlayRoomPlayerList from '@/components/playroom/PlayRoomPlayerList';
@@ -36,7 +41,7 @@ import PlayRoomRoleList from '@/components/playroom/PlayRoomRoleList';
 export default {
   name: 'PlayRoom',
   components: {
-    // PlayRoomFriendList,
+    PlayRoomFriendList,
     PlayRoomChatbox,
     PlayRoomHeader,
     PlayRoomPlayerList,
@@ -142,7 +147,7 @@ export default {
 }
 
 #playroom-body {
-  min-height: 60%;
+  min-height: 50%;
   align-items: stretch;
   justify-content: space-between;
   padding-left: 20px;
@@ -150,7 +155,7 @@ export default {
 }
 
 .left-panel {
-  width: 18%;
+  width: 22%;
   height: auto;
   box-sizing: border-box;
 }

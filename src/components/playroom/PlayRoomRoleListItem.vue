@@ -7,8 +7,8 @@
     <img :src="require('@/assets/img/' + img + '.png')"/>
     <transition name="fade">
       <div v-if="hover" class="role-info box-white">
-        <p class="role-name">{{ name }}</p>
-        <p>{{ description }}</p>
+        <p class="role-name align-ct">{{ name }}</p>
+        <p class="role-description">{{ description }}</p>
       </div>
     </transition>
   </div>
@@ -56,7 +56,6 @@ img {
   left: -12.5px;
   background-color: $white;
   padding: 10px;
-  font-size: 0.8rem;
 }
 
 .role-name {
@@ -70,6 +69,10 @@ img {
 .role-name ~ p {
   margin-top: 0;
   margin-bottom: 0;
+}
+
+.role-description {
+  font-size: 0.85rem;
 }
 
 .role-info::after {

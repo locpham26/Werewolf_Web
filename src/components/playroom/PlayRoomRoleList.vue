@@ -102,7 +102,7 @@ export default {
 .fl-center {
   width: 100%;
   position: fixed;
-  bottom: 0;
+  bottom: 10px;
 }
 
 .box-gray {

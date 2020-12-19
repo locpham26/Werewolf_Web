@@ -1,5 +1,8 @@
 <template>
-  <div id="playroom-header" class="d-fl">
+  <div
+    id="playroom-header"
+    class="d-fl"
+  >
     <div id="button-container" class="d-fl">
       <button class="box-gray d-fl">
         <img @click="leave" :src="require('@/assets/img/close.svg')" />
@@ -30,14 +33,29 @@
       </div>
     </div>
 
-    <div id="player"
-    :style="[isGameStarted ? {'visibility': 'visible'} : {'visibility': 'hidden'}]">
-      <div class="box-gray">
+    <div
+      id="player"
+      :style="[isGameStarted ? {visibility: 'visible', } : {visibility: 'hidden', width: '22%'}]"
+    >
+      <div
+        :class="{
+          'my-turn-wolf': myTurn && userInfo.role === 'wolf',
+          'my-turn-villager': myTurn && !['wolf', 'villager'].includes(userInfo.role),
+          'box-gray': true
+        }">
         <img class="avatar"
         :src="isGameStarted ?
         require('@/assets/img/' + userInfo.role + '.png') :
         require('@/assets/img/villager.png')"/>
-        <p :class="['my-role', {'red-text': userInfo.role === 'wolf'}]">
+        <p
+          :class="[
+            'my-role',
+            {
+              'red-text': userInfo.role === 'wolf',
+              'white-text': myTurn && userInfo.role !== 'villager'
+            }
+          ]"
+        >
           You're {{ userInfo.role }}
         </p>
       </div>
@@ -110,6 +128,9 @@ export default {
     };
   },
   computed: {
+    myTurn() {
+      return this.userInfo.role !== '' && (this.gameTurn.slice(0, this.userInfo.role.length) === this.userInfo.role);
+    },
     showClock() {
       return !['dayStart', 'dayEnd', 'gameStart', 'gameEnd'].includes(this.gameTurn);
     },
@@ -117,35 +138,25 @@ export default {
       return !['dayStart', 'dayEnd', 'gameStart', 'gameEnd', 'villager'].includes(this.gameTurn);
     },
     nightMessage() {
-      switch (this.night) {
+      let suffix;
+      console.log(this.night);
+      switch (this.night % 10) {
         case 1:
-          return 'First Night';
+          suffix = 'st';
+          break;
         case 2:
-          return 'Second Night';
+          suffix = 'nd';
+          break;
         case 3:
-          return 'Third Night';
-        case 4:
-          return 'Fourth Night';
-        case 5:
-          return 'Fifth Night';
-        case 6:
-          return 'Sixth Night';
-        case 7:
-          return 'Seventh Night';
-        case 8:
-          return 'Eigth Night';
-        case 9:
-          return 'Ninth Night';
-        case 10:
-          return 'Tenth Night';
-        case 11:
-          return 'Eleventh Night';
-        case 12:
-          return 'Twelfth Night';
+          suffix = 'rd';
+          break;
         default:
-          return '';
+          suffix = 'th';
+          break;
       }
+      return `${this.night}${suffix} Night`;
     },
+
   },
   watch: {
     gameTurn(value) {
@@ -229,6 +240,7 @@ export default {
   align-items: center;
   color: $white;
   margin-bottom: auto;
+  width: 22%;
 }
 
 #button-container button {
@@ -260,7 +272,7 @@ export default {
 }
 
 #monitor {
-  width: 60%;
+  width: 50%;
 }
 
 #monitor > .box-gray {
@@ -309,5 +321,19 @@ p {
 
 #start-button {
   color: $white;
+}
+
+.white-text {
+  color: $white !important;
+}
+
+.my-turn-wolf {
+  background: $red;
+  opacity: 0.95;
+}
+
+.my-turn-villager {
+  background: $orange;
+  opacity: 0.95;
 }
 </style>

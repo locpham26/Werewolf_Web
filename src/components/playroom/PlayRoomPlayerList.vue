@@ -1,6 +1,9 @@
 <template>
-  <div id="playroom-player-list" class="box-gray"
-  :class="{'my-turn': myTurn, 'villager': gameTurn === 'villager'}">
+  <div
+    id="playroom-player-list"
+    class="box-gray"
+    :style="{width: isGameStarted ? '63%' : '50%'}"
+  >
       <PlayRoomPlayerListItem
         v-for="(player, i) in players" :key="i"
         :avatar="avatars[i]"
@@ -18,7 +21,7 @@ import PlayRoomPlayerListItem from './PlayRoomPlayerListItem';
 
 export default {
   name: 'PlayRoomPlayerList',
-  props: ['players', 'userInfo', 'gameTurn'],
+  props: ['isGameStarted', 'players', 'userInfo', 'gameTurn'],
   components: { PlayRoomPlayerListItem },
   data() {
     return {
@@ -48,11 +51,6 @@ export default {
       return voteAvatars;
     },
   },
-  computed: {
-    myTurn() {
-      return this.userInfo.role !== '' && (this.gameTurn.slice(0, this.userInfo.role.length) === this.userInfo.role);
-    },
-  },
   watch: {
     gameTurn(value) {
       this.checkRole.isChecking = value === 'seer' && this.userInfo.role === 'seer';
@@ -74,7 +72,6 @@ export default {
 @import '@/assets/styles/_base';
 
 #playroom-player-list {
-  width: 73%;
   box-sizing: border-box;
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
@@ -83,14 +80,6 @@ export default {
   grid-template-rows: repeat(auto-fill, minmax(80px, 1fr));
   column-gap: 20px;
   row-gap: 15px;
-}
-
-.my-turn {
-  background-color: rgba(13, 212, 238, 0.4) !important;
-}
-
-.villager {
-  background-color: rgba(255, 194, 102, 0.4) !important;
 }
 
 </style>
