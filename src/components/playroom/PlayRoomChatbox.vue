@@ -1,6 +1,6 @@
 <template>
   <div class="box-dark d-fl"
-    :style="{width: isGameStarted ? '35%' : '22%'}"
+    :style="{width: isGameStarted ? '35%' : '18%'}"
   >
     <div class="chat-container" v-if="activeChannel === 'all'">
       <div v-for="(mess, i) in generalMessages" :key="i">
@@ -105,6 +105,7 @@ export default {
 .chat-container {
   height: 25rem;
   overflow-y: auto;
+  font-size: 0.9rem;
 }
 
 .chatbox-input {

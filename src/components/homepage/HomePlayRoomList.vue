@@ -37,7 +37,7 @@ export default {
 
 .room-list-container {
   width: 100%;
-  height: 100%;
+  height: 470px;
 }
 
 .d-fl p:first-child {

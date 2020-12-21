@@ -2,17 +2,20 @@
   <div
     id="playroom-player-list"
     class="box-gray"
-    :style="{width: isGameStarted ? '63%' : '50%'}"
+    :style="{width: isGameStarted ? '63%' : '60%'}"
   >
+    <div v-for="pos in 12" :key="pos">
       <PlayRoomPlayerListItem
-        v-for="(player, i) in players" :key="i"
-        :avatar="avatars[i]"
-        :playerInfo="player"
+        v-if="getPlayerByPos(pos-1)"
+        :avatar="avatars[pos-1]"
+        :playerInfo="getPlayerByPos(pos-1)"
         :userInfo="userInfo"
-        :votes="getVoteAvatars(player.votes)"
+        :votes="getVoteAvatars(getPlayerByPos(pos-1).votes)"
         :checkRole="checkRole"
         :gameTurn="gameTurn"
         :myTurn="myTurn" />
+      <div v-else class="empty-pos"></div>
+    </div>
   </div>
 </template>
 
@@ -41,7 +44,10 @@ export default {
   methods: {
     getAvatarByName(playerName) {
       const playerIndex = this.players.findIndex((player) => player.name === playerName);
-      return this.avatars[playerIndex];
+      if (playerIndex) {
+        return this.avatars[playerIndex];
+      }
+      return null;
     },
     getVoteAvatars(votes) {
       const voteAvatars = [];
@@ -49,6 +55,18 @@ export default {
         voteAvatars.push(this.getAvatarByName(vote));
       });
       return voteAvatars;
+    },
+    getPlayerByPos(playerPos) {
+      const playerAtPos = this.players.find((player) => player.pos === playerPos);
+      if (playerAtPos) {
+        return playerAtPos;
+      }
+      return false;
+    },
+  },
+  computed: {
+    myTurn() {
+      return this.userInfo.role !== '' && (this.gameTurn.slice(0, this.userInfo.role.length) === this.userInfo.role);
     },
   },
   watch: {
@@ -80,6 +98,11 @@ export default {
   grid-template-rows: repeat(auto-fill, minmax(80px, 1fr));
   column-gap: 20px;
   row-gap: 15px;
+}
+
+.empty-pos {
+  @extend .box-black;
+  opacity: 0.3;
 }
 
 </style>

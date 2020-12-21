@@ -55,8 +55,7 @@ export default {
 }
 
 button:hover {
-  background-color: $light;
-  color: $black;
+  @extend .box-white;
 }
 
 input {

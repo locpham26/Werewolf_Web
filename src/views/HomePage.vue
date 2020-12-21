@@ -74,12 +74,14 @@ export default {
 #home-body-left {
   width: 20%;
   height: 100%;
+  box-sizing: border-box;
 }
 
 #home-body-right {
   width: 40%;
   height: 100%;
   margin-left: 20px;
+  box-sizing: border-box;
 }
 
 #noti {

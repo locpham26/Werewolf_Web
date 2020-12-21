@@ -3,16 +3,29 @@
     id="playroom-header"
     class="d-fl"
   >
-    <div id="button-container" class="d-fl">
+    <div id="button-container" class="fl-between">
       <button class="box-gray d-fl">
         <img @click="leave" :src="require('@/assets/img/close.svg')" />
+      </button>
+      <button
+        id="skip-button"
+        class="box-gray"
+        v-show="(myTurn || gameTurn === 'villager') && !skipped"
+        @click="skip"
+      >
+        Skip
       </button>
     </div>
 
     <div :style="{marginTop: !isGameStarted && 'auto'}" id="monitor">
       <div v-if="isGameStarted" class="fl-center">
         <div class="box-gray" v-show="showClock">{{ countdown }}s</div>
-        <p v-show="showNightMessage">{{ nightMessage }}</p>
+        <p
+          class="white-text"
+          :style="!showNightMessage && {visibility: 'hidden'}"
+        >
+          {{ nightMessage }}
+        </p>
       </div>
       <div v-if="isGameStarted && gameTurn !== ''" class="box-gray">
         {{ gameTurn.slice(0, userInfo.role.length) === userInfo.role ?
@@ -35,7 +48,10 @@
 
     <div
       id="player"
-      :style="[isGameStarted ? {visibility: 'visible', } : {visibility: 'hidden', width: '22%'}]"
+      :style="[
+      isGameStarted
+      ? {visibility: 'visible', width: '18%'}
+      : {visibility: 'hidden', width: '18%'}]"
     >
       <div
         :class="{
@@ -71,6 +87,7 @@ export default {
     return {
       countdown: '',
       night: 0,
+      skipped: false,
       monitorMessage: {
         gameStart: {
           generalMessage: 'The game has started. You have been assigned a role. The first night will come soon. Be prepared.',
@@ -127,6 +144,20 @@ export default {
       },
     };
   },
+  methods: {
+    skip() {
+      this.skipped = true;
+      this.$store.getters['socket/getUserSocket'].emit('skipTurn', { roomId: this.$route.params.id });
+      if (this.gameTurn === 'villager' || this.gameTurn === 'wolf') {
+        this.$store.getters['socket/getUserSocket'].emit('playerAction', {
+          from: this.userInfo.name,
+          target: '',
+          type: 'skip',
+          roomId: this.$route.params.id,
+        });
+      }
+    },
+  },
   computed: {
     myTurn() {
       return this.userInfo.role !== '' && (this.gameTurn.slice(0, this.userInfo.role.length) === this.userInfo.role);
@@ -162,6 +193,7 @@ export default {
     gameTurn(value) {
       if (value === 'nightStart') this.night += 1;
       if (value === 'gameStart') this.night = 0;
+      if (value === 'dayStart') this.skipped = false;
     },
   },
   mounted() {
@@ -237,10 +269,10 @@ export default {
 }
 
 #button-container {
-  align-items: center;
   color: $white;
-  margin-bottom: auto;
-  width: 22%;
+  width: 18%;
+  flex-direction: column;
+  align-items: flex-start;
 }
 
 #button-container button {
@@ -251,8 +283,12 @@ export default {
   font-size: 0.9rem;
 }
 
-.fl-center {
-  justify-content: space-between;
+#skip-button {
+  width: 50%;
+}
+
+#skip-button:hover {
+  @extend .box-white;
 }
 
 #player {
@@ -272,7 +308,7 @@ export default {
 }
 
 #monitor {
-  width: 50%;
+  width: 60%;
 }
 
 #monitor > .box-gray {
@@ -290,7 +326,7 @@ export default {
 }
 
 #monitor > .fl-center > p:nth-child(2) {
-  font-size: 1.5rem;
+  font-size: 1.2rem;
   font-family: $font-bold;
 }
 
@@ -328,7 +364,7 @@ p {
 }
 
 .my-turn-wolf {
-  background: $red;
+  background: $pink;
   opacity: 0.95;
 }
 

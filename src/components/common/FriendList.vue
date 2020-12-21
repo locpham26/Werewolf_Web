@@ -33,6 +33,7 @@ export default {
 .friend-container {
   height: calc(100% - 48px);
   margin-top: 10px;
+  box-sizing: border-box;
 }
 
 .friend-title {

@@ -60,10 +60,6 @@ export default {
         role: '',
         isAlive: true,
       },
-      pendingAction: {
-        type: '',
-        target: '',
-      },
     };
   },
   computed: {
@@ -89,26 +85,12 @@ export default {
     startGame() {
       this.$store.getters['socket/getUserSocket'].emit('start', { roomId: this.$route.params.id });
     },
-    callAction(actionType) {
-      if (actionType === 'skip') {
-        this.$store.getters['socket/getUserSocket'].emit('skipTurn', { roomId: this.$route.params.id });
-        if (this.gameInfo.turn === 'villager' || this.gameInfo.turn === 'wolf') {
-          this.$store.getters['socket/getUserSocket'].emit('playerAction', {
-            from: this.userInfo.name,
-            target: '',
-            type: 'skip',
-            roomId: this.$route.params.id,
-          });
-        }
-      } else {
-        this.pendingAction.type = actionType;
-      }
-    },
   },
   mounted() {
     this.$store.getters['socket/getUserSocket'].on('roomPlayer', (room) => {
       this.gameInfo.players = room.playerList;
       this.gameInfo.started = room.isStarted;
+      console.log(room);
 
       const me = this.gameInfo.players.find(
         (player) => player.name === this.userInfo.name,
@@ -147,7 +129,7 @@ export default {
 }
 
 #playroom-body {
-  min-height: 50%;
+  min-height: 60%;
   align-items: stretch;
   justify-content: space-between;
   padding-left: 20px;
@@ -155,7 +137,7 @@ export default {
 }
 
 .left-panel {
-  width: 22%;
+  width: 18%;
   height: auto;
   box-sizing: border-box;
 }

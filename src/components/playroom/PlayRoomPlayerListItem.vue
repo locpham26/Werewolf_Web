@@ -67,7 +67,7 @@ export default {
     removeFromDisabledList(actionList) {
       actionList.forEach((actionType) => {
         const actionIndex = this.disabledActions.findIndex((action) => action === actionType);
-        if (actionIndex) {
+        if (actionIndex >= 0) {
           this.disabledActions.splice(actionIndex, 1);
         }
       });
@@ -96,10 +96,10 @@ export default {
   watch: {
     gameTurn(value) {
       if (value === 'dayStart') {
-        this.removeFromDisabledList(['protect', 'check', 'kill', 'skip']);
+        this.removeFromDisabledList(['protect', 'check', 'kill']);
         this.effects = [];
       } else if (value === 'dayEnd') {
-        this.removeFromDisabledList(['skip', 'vote']);
+        this.removeFromDisabledList(['vote']);
       }
     },
   },

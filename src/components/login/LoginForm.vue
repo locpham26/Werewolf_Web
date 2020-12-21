@@ -108,9 +108,8 @@ a {
   font-size: 1rem;
   color: $white;
   &:hover {
-    background: $light;
+    @extend .box-white;
     border-radius: 3px;
-    color: $dark;
     font-family: $font-bold;
   }
 }

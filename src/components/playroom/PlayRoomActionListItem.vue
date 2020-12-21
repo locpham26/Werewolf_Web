@@ -44,7 +44,7 @@ export default {
 
 .disabled {
   pointer-events: none;
-  opacity: 0.7;
+  opacity: 0.4;
 }
 
 </style>
