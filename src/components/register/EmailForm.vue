@@ -76,9 +76,17 @@ export default {
     resetInput() {
       this.email.value = '';
     },
-    submitForm() {
+    async submitForm() {
+      console.log(this.email.value);
       this.validateEmail();
       if (this.email.isValid) {
+        try {
+          await this.$store.dispatch('auth/sendRegisterEmail', {
+            email: this.email.value,
+          });
+        } catch (exception) {
+          this.form.isValid = false;
+        }
         setTimeout(() => {
           console.log(this.email.value);
           this.form.isValid = true;
