@@ -28,10 +28,12 @@
       :isDay="isDay"
     />
   </div>
+  <transition name="slide-up">
   <PlayRoomRoleList
     :playerNum="gameInfo.players.length"
     :isDay="isDay"
     :isGameStarted="gameInfo.started" />
+  </transition>
   </div>
 </template>
 
@@ -65,6 +67,7 @@ export default {
         role: '',
         isAlive: true,
       },
+      bgUrl: '@/assets/img/day7.jpg',
     };
   },
   computed: {
@@ -95,7 +98,7 @@ export default {
     this.$store.getters['socket/getUserSocket'].on('roomPlayer', (room) => {
       this.gameInfo.players = room.playerList;
       this.gameInfo.started = room.isStarted;
-
+      console.log(this.gameInfo.players);
       const me = this.gameInfo.players.find(
         (player) => player.name === this.userInfo.name,
       );
@@ -151,11 +154,20 @@ export default {
   box-sizing: border-box;
 }
 
-.friend-list-leave-active, .friend-list-enter-active {
-  transition: all .3s ease;
+.slide-up-leave-active, .slide-up-enter-active {
+  transition: all .5s ease;
 }
-.friend-list-enter, .friend-list-leave-to {
-  transform: translateX(-10px);
+.slide-up-enter-from, .slide-up-leave-to {
+  transform: translateY(-10px);
   opacity: 0;
 }
+
+.slide-down-leave-active, .slide-down-enter-active {
+  transition: all .5s ease;
+}
+.slide-down-enter-from, .slide-down-leave-to {
+  transform: translateY(10px);
+  opacity: 0;
+}
+
 </style>

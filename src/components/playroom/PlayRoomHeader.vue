@@ -1,36 +1,33 @@
 <template>
-  <div
-    id="playroom-header"
-    class="d-fl"
-  >
+  <div id="playroom-header" class="d-fl">
     <div id="button-container" class="fl-between">
       <button class="box-gray d-fl">
-        <img @click="leave" :src="require('@/assets/img/close.svg')" />
+        <img @click="leave" src="@/assets/img/close.svg" />
       </button>
+      <transition name="slide-skip">
       <button
         id="skip-button"
         class="box-gray"
         v-show="(myTurn || gameTurn === 'villager') && !skipped"
-        @click="skip"
-      >
+        @click="skip">
         Skip
       </button>
+      </transition>
     </div>
 
     <div :style="{marginTop: !isGameStarted && 'auto'}" id="monitor">
       <div v-if="isGameStarted" class="fl-center">
         <div class="box-gray" v-show="showClock">{{ countdown }}s</div>
-        <p
-          class="white-text"
-          :style="!showNightMessage && {visibility: 'hidden'}"
-        >
+        <p class="white-text" :style="!showNightMessage && {visibility: 'hidden'}">
           {{ nightMessage }}
         </p>
       </div>
       <div v-if="isGameStarted && gameTurn !== ''" class="box-gray">
-        {{ gameTurn.slice(0, userInfo.role.length) === userInfo.role ?
-        monitorMessage[gameTurn].roleMessage :
-        monitorMessage[gameTurn].generalMessage }}
+        <transition name="bounce" mode="out-in">
+        <p :key="displayedMessage">
+          {{displayedMessage}}
+        </p>
+        </transition>
       </div>
       <div v-if="!isGameStarted" class="box-gray d-fl">
         <p>Room ID: {{ $route.params.id }}</p>
@@ -53,8 +50,7 @@
       ? {visibility: 'visible', width: '18%'}
       : {visibility: 'hidden', width: '18%'}]"
     >
-      <div
-        :class="{
+      <div :class="{
           'my-turn-wolf': myTurn && userInfo.role === 'wolf',
           'my-turn-villager': myTurn && !['wolf', 'villager'].includes(userInfo.role),
           'box-gray': true
@@ -63,15 +59,9 @@
         :src="isGameStarted ?
         require('@/assets/img/' + userInfo.role + '.png') :
         require('@/assets/img/villager.png')"/>
-        <p
-          :class="[
-            'my-role',
-            {
-              'red-text': userInfo.role === 'wolf',
-              'white-text': myTurn && userInfo.role !== 'villager'
-            }
-          ]"
-        >
+        <p :class="['my-role', {
+            'red-text': userInfo.role === 'wolf',
+            'white-text': myTurn && userInfo.role !== 'villager'}]">
           You're {{ userInfo.role }}
         </p>
       </div>
@@ -159,6 +149,11 @@ export default {
     },
   },
   computed: {
+    displayedMessage() {
+      return this.gameTurn.slice(0, this.userInfo.role.length) === this.userInfo.role
+        ? this.monitorMessage[this.gameTurn].roleMessage
+        : this.monitorMessage[this.gameTurn].generalMessage;
+    },
     myTurn() {
       return this.userInfo.role !== '' && (this.gameTurn.slice(0, this.userInfo.role.length) === this.userInfo.role);
     },
@@ -170,7 +165,6 @@ export default {
     },
     nightMessage() {
       let suffix;
-      console.log(this.night);
       switch (this.night % 10) {
         case 1:
           suffix = 'st';
@@ -291,6 +285,15 @@ export default {
   @extend .box-white;
 }
 
+.slide-skip-enter-active, .slide-skip-leave-active {
+  transition: all 0.5s ease;
+}
+
+.slide-skip-enter-from, .slide-skip-leave-to {
+  opacity: 0;
+  transform: translateX(-10px);
+}
+
 #player {
   width: 15%;
 }
@@ -311,7 +314,7 @@ export default {
   width: 60%;
 }
 
-#monitor > .box-gray {
+#monitor > .box-gray > p {
   font-size: 1.1rem;
 }
 
@@ -371,5 +374,21 @@ p {
 .my-turn-villager {
   background: $orange;
   opacity: 0.95;
+}
+
+.bounce-enter-active {
+  animation: bounce-in 0.5s;
+}
+
+@keyframes bounce-in {
+  0% {
+    transform: scale(0);
+  }
+  50% {
+    transform: scale(1.25);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 </style>

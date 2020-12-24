@@ -46,7 +46,7 @@ export default {
   methods: {
     getAvatarByName(playerName) {
       const playerIndex = this.players.findIndex((player) => player.name === playerName);
-      if (playerIndex) {
+      if (playerIndex > -1) {
         return this.avatars[playerIndex];
       }
       return null;
@@ -56,6 +56,7 @@ export default {
       votes.forEach((vote) => {
         voteAvatars.push(this.getAvatarByName(vote));
       });
+      console.log(voteAvatars);
       return voteAvatars;
     },
     getPlayerByPos(playerPos) {
