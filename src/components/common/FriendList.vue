@@ -7,7 +7,7 @@
           <img src='@/assets/img/user.svg'/>
           <div class="friend-name">{{ name }}</div>
         </div>
-        <slot></slot>
+        <slot :friendName="name" name="invite"></slot>
       </div>
     </div>
   </div>
@@ -19,8 +19,8 @@ export default {
   data() {
     return {
       friends: [
-        'Meo meo',
-        'Doggie',
+        'Tez',
+        'Draw',
         'WoffWoff',
         'Name',
       ],

@@ -5,6 +5,11 @@
     <img :src="!playerInfo.isAlive ?
       require('@/assets/img/grave.png') :
       require('@/assets/img/' + avatar + '.png')" />
+      <div class="remove-player-button"
+        v-show="showRemoveButton"
+        @click="removePlayer(playerInfo.name)">
+        <img src="@/assets/img/close.svg">
+      </div>
     <div class="player-info">
       <div :class="{'align-l': true, wolf: isWolf, me: isMe}">{{ playerInfo.name }}</div>
       <div class="vote-container d-fl">
@@ -43,7 +48,7 @@ import PlayRoomActionListItem from './PlayRoomActionListItem';
 export default {
   name: 'PlayRoomPlayerListItem',
   components: { PlayRoomActionListItem },
-  props: ['avatar', 'playerInfo', 'userInfo', 'votes', 'gameTurn', 'checkRole', 'myTurn'],
+  props: ['avatar', 'playerInfo', 'userInfo', 'votes', 'gameTurn', 'checkRole', 'myTurn', 'isHost', 'isGameStarted'],
   data() {
     return {
       actionHover: false,
@@ -75,6 +80,9 @@ export default {
     addEffect(effect) {
       this.effects.push(effect);
     },
+    removePlayer(playerName) {
+      this.$store.getters['socket/getUserSocket'].emit('kick', { roomId: this.$route.params.id, playerName });
+    },
   },
   computed: {
     isWolf() {
@@ -92,6 +100,9 @@ export default {
     showRoleChecked() {
       return this.checkRole.isChecking && this.playerInfo.name === this.checkRole.target;
     },
+    showRemoveButton() {
+      return !this.isGameStarted && this.isHost && this.actionHover && !this.isMe;
+    },
   },
   watch: {
     gameTurn(value) {
@@ -100,6 +111,8 @@ export default {
         this.effects = [];
       } else if (value === 'dayEnd') {
         this.removeFromDisabledList(['vote']);
+      } else if (value === 'gameEnd') {
+        this.disabledActions = [];
       }
     },
   },
@@ -182,6 +195,20 @@ export default {
   left: 30%;
   bottom: 5%;
   padding: none;
+}
+
+.remove-player-button {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-self: center;
+  width: 30px;
+  height: 30px;
+  right: -5%;
+  top: -10%;
+  border-radius: 15px;
+  background-color: $dark;
+  cursor: pointer;
 }
 
 </style>

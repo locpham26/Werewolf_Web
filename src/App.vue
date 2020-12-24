@@ -21,6 +21,7 @@ body {
   width: 100%;
   font-family: $font-regular;
   margin: 0;
+  overflow: hidden;
 }
 
 html {

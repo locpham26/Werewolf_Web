@@ -10,12 +10,17 @@
     :start="startGame"
   />
   <div id="playroom-body" class="fl-center">
-    <div class="left-panel" v-if="!gameInfo.started"><PlayRoomFriendList /></div>
+    <transition name="friend-list">
+      <div class="left-panel" v-if="!gameInfo.started">
+        <PlayRoomFriendList :userName="userInfo.name" />
+      </div>
+    </transition>
     <PlayRoomPlayerList
       :players="gameInfo.players"
       :userInfo="userInfo"
       :gameTurn="gameInfo.turn"
       :isGameStarted="gameInfo.started"
+      :isHost="isHost"
     />
     <PlayRoomChatbox
       :isGameStarted="gameInfo.started"
@@ -90,7 +95,6 @@ export default {
     this.$store.getters['socket/getUserSocket'].on('roomPlayer', (room) => {
       this.gameInfo.players = room.playerList;
       this.gameInfo.started = room.isStarted;
-      console.log(room);
 
       const me = this.gameInfo.players.find(
         (player) => player.name === this.userInfo.name,
@@ -101,9 +105,14 @@ export default {
 
     this.$store.getters['socket/getUserSocket'].on('changeTurn', (data) => {
       this.gameInfo.turn = data.roomTurn;
-      if (this.userInfo.name === this.gameInfo.players[0].name) {
+      if (this.isHost) {
         this.$store.getters['socket/getUserSocket'].emit('turnChange', { roomId: this.$route.params.id, skipped: data.skipped });
       }
+    });
+
+    this.$store.getters['socket/getUserSocket'].on('kicked', () => {
+      this.$store.getters['socket/getUserSocket'].emit('leave', { userName: this.userInfo.name, roomId: this.$route.params.id });
+      this.$router.push('/homepage');
     });
   },
 };
@@ -140,5 +149,13 @@ export default {
   width: 18%;
   height: auto;
   box-sizing: border-box;
+}
+
+.friend-list-leave-active, .friend-list-enter-active {
+  transition: all .3s ease;
+}
+.friend-list-enter, .friend-list-leave-to {
+  transform: translateX(-10px);
+  opacity: 0;
 }
 </style>

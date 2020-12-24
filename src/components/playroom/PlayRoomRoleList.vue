@@ -1,19 +1,21 @@
 <template>
-  <div class="fl-center" v-if="isGameStarted">
-    <div
+  <transition name="role-list">
+    <div class="fl-center" v-if="isGameStarted">
+      <div
       v-for="role in usedRoles"
       :key="role.name"
       class="box-gray"
       :class="{'night': !isDay}"
-    >
-      <PlayRoomRoleListItem
-        :name="role.name"
-        :number="role.number"
-        :img="role.img"
-        :description="role.description"
-      />
+      >
+        <PlayRoomRoleListItem
+          :name="role.name"
+          :number="role.number"
+          :img="role.img"
+          :description="role.description"
+        />
+      </div>
     </div>
-  </div>
+  </transition>
 </template>
 
 <script>

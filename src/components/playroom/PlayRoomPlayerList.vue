@@ -13,8 +13,10 @@
         :votes="getVoteAvatars(getPlayerByPos(pos-1).votes)"
         :checkRole="checkRole"
         :gameTurn="gameTurn"
-        :myTurn="myTurn" />
-      <div v-else class="empty-pos"></div>
+        :myTurn="myTurn"
+        :isHost="isHost"
+        :isGameStarted="isGameStarted" />
+      <div v-else></div>
     </div>
   </div>
 </template>
@@ -24,7 +26,7 @@ import PlayRoomPlayerListItem from './PlayRoomPlayerListItem';
 
 export default {
   name: 'PlayRoomPlayerList',
-  props: ['isGameStarted', 'players', 'userInfo', 'gameTurn'],
+  props: ['isGameStarted', 'players', 'userInfo', 'gameTurn', 'isHost'],
   components: { PlayRoomPlayerListItem },
   data() {
     return {
@@ -98,11 +100,6 @@ export default {
   grid-template-rows: repeat(auto-fill, minmax(80px, 1fr));
   column-gap: 20px;
   row-gap: 15px;
-}
-
-.empty-pos {
-  @extend .box-black;
-  opacity: 0.3;
 }
 
 </style>

@@ -49,7 +49,7 @@ export default {
   },
   methods: {
     send(e) {
-      if (e.keyCode === 13) {
+      if (e.keyCode === 13 && this.sentMessage !== '') {
         if (this.activeChannel === 'all') {
           this.sendMessage(this.sentMessage, false);
         } else {
