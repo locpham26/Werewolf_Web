@@ -56,7 +56,6 @@ export default {
       votes.forEach((vote) => {
         voteAvatars.push(this.getAvatarByName(vote));
       });
-      console.log(voteAvatars);
       return voteAvatars;
     },
     getPlayerByPos(playerPos) {
@@ -101,6 +100,7 @@ export default {
   grid-template-rows: repeat(auto-fill, minmax(80px, 1fr));
   column-gap: 20px;
   row-gap: 15px;
+  transition: width 1.6s ease;
 }
 
 </style>

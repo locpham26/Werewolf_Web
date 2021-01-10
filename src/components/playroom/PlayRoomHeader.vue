@@ -59,11 +59,14 @@
         :src="isGameStarted ?
         require('@/assets/img/' + userInfo.role + '.png') :
         require('@/assets/img/villager.png')"/>
+        <transition name="bounce-name" appear>
         <p :class="['my-role', {
             'red-text': userInfo.role === 'wolf',
-            'white-text': myTurn && userInfo.role !== 'villager'}]">
+            'white-text': myTurn && userInfo.role !== 'villager'}]"
+            :key="userInfo.role">
           You're {{ userInfo.role }}
         </p>
+        </transition>
       </div>
     </div>
   </div>
@@ -380,11 +383,30 @@ p {
   animation: bounce-in 0.5s;
 }
 
+.bounce-name-enter-active {
+  animation: bounce-in 3.0s;
+}
+
 @keyframes bounce-in {
   0% {
     transform: scale(0);
   }
-  50% {
+  15% {
+    transform: scale(1.5);
+  }
+  30% {
+    transform: scale(1);
+  }
+  45% {
+    transform: scale(1.5);
+  }
+  60% {
+    transform: scale(1);
+  }
+  75% {
+    transform: scale(1.5);
+  }
+  90% {
     transform: scale(1.25);
   }
   100% {

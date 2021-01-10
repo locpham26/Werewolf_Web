@@ -1,5 +1,6 @@
 <template>
 <div class="playroom-container" :class="{'night': !isDay}">
+  <transition name="slide-down" appear>
   <PlayRoomHeader
     :isGameStarted="gameInfo.started"
     :gameTurn="gameInfo.turn"
@@ -9,8 +10,9 @@
     :leave="playerLeave"
     :start="startGame"
   />
+  </transition>
   <div id="playroom-body" class="fl-center">
-    <transition name="friend-list">
+    <transition appear name="slide-in" mode="out-in">
       <div class="left-panel" v-if="!gameInfo.started">
         <PlayRoomFriendList :userName="userInfo.name" />
       </div>
@@ -27,13 +29,11 @@
       :userInfo="userInfo"
       :isDay="isDay"
     />
-  </div>
-  <transition name="slide-up">
+  </div>>
   <PlayRoomRoleList
     :playerNum="gameInfo.players.length"
     :isDay="isDay"
     :isGameStarted="gameInfo.started" />
-  </transition>
   </div>
 </template>
 
@@ -98,7 +98,7 @@ export default {
     this.$store.getters['socket/getUserSocket'].on('roomPlayer', (room) => {
       this.gameInfo.players = room.playerList;
       this.gameInfo.started = room.isStarted;
-      console.log(this.gameInfo.players);
+
       const me = this.gameInfo.players.find(
         (player) => player.name === this.userInfo.name,
       );
@@ -124,20 +124,22 @@ export default {
 <style lang="scss" scoped>
 @import '@/assets/styles/_base';
 
+@mixin background-property($imageUrl) {
+  background-image: url($imageUrl);
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  transition: background-image 2.5s ease-in-out;
+}
+
 .playroom-container {
   width: 100%;
   height: 100%;
-  background: url("../assets/img/day7.jpg");
-  background-attachment: fixed;
-  background-repeat: no-repeat;
-  background-size: 100% 100%;
+  @include background-property("../assets/img/day7.jpg")
 }
 
 .night {
-  background: url("../assets/img/night1.jpg");
-  background-attachment: fixed;
-  background-repeat: no-repeat;
-  background-size: 100% 100%;
+  @include background-property("../assets/img/night1.jpg")
 }
 
 #playroom-body {
@@ -154,20 +156,21 @@ export default {
   box-sizing: border-box;
 }
 
-.slide-up-leave-active, .slide-up-enter-active {
-  transition: all .5s ease;
+.slide-in-leave-active, .slide-in-enter-active {
+  transition: all 1.5s ease-in-out;
 }
-.slide-up-enter-from, .slide-up-leave-to {
-  transform: translateY(-10px);
+.slide-in-enter-from, .slide-in-leave-to {
+  transform: translateX(-10px);
+  width: 0;
   opacity: 0;
 }
 
 .slide-down-leave-active, .slide-down-enter-active {
-  transition: all .5s ease;
+  transition: all 1.5s linear;
 }
 .slide-down-enter-from, .slide-down-leave-to {
-  transform: translateY(10px);
+  transform: translateY(-20px);
+  height: 0;
   opacity: 0;
 }
-
 </style>

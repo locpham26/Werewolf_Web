@@ -44,6 +44,7 @@ export default {
 .friend-name-container {
   height: calc(100% - 28px);
   overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .friend-name-container > .d-fl {

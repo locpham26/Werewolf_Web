@@ -12,3 +12,18 @@
   -o-transform: $property;
   -webkit-transform: $property;
 }
+
+@mixin scrollbars() {
+  &::-webkit-scrollbar {
+    width: 10px;
+  }
+  &::-webkit-scrollbar-track {
+    background: $dark;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: $light;
+  }
+  &::-webkit-scrollbar-thumb:hover {
+    background: $white;
+  }
+}

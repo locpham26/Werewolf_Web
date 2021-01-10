@@ -1,21 +1,21 @@
 <template>
-  <transition name="role-list">
-    <div class="fl-center" v-if="isGameStarted">
+<transition name="slide-up" appear>
+<div class="fl-center" v-if="isGameStarted">
       <div
-      v-for="role in usedRoles"
-      :key="role.name"
-      class="box-gray"
-      :class="{'night': !isDay}"
-      >
+      v-for="role in usedRoles" :key="role.name">
+      <transition name="slide-up" appear>
+      <div class="box-gray"
+      :class="{'night': !isDay}">
         <PlayRoomRoleListItem
           :name="role.name"
           :number="role.number"
           :img="role.img"
           :description="role.description"
-        />
+        /></div>
+        </transition>
       </div>
     </div>
-  </transition>
+</transition>
 </template>
 
 <script>
@@ -111,16 +111,27 @@ export default {
   position: relative;
   width: 4rem;
   height: 4rem;
-  border: 1px solid $orange;
+  border: 1px solid;
+  border-color: $orange;
   padding: 10px;
   margin-left: 5px;
   margin-right: 5px;
   margin-top: auto;
   flex-shrink: 0;
+  transition: border-color 2s ease-in-out;
 }
 
 .night {
-  border: 1px solid blue;
+  border: 1px solid;
+  border-color: blue;
+  transition: border-color 2s ease-in-out;
 }
 
+.slide-up-leave-active, .slide-up-enter-active {
+  transition: all 1.5s ease-in-out;
+}
+.slide-up-enter-from, .slide-up-leave-to {
+  opacity: 0;
+  height: 0;
+}
 </style>

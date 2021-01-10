@@ -2,7 +2,7 @@
   <div class="box-dark d-fl"
     :style="{width: isGameStarted ? '35%' : '18%'}"
   >
-    <div class="chat-container" v-if="activeChannel === 'all'">
+    <div ref="generalChat" class="chat-container" v-if="activeChannel === 'all'">
       <div v-for="(mess, i) in generalMessages" :key="i">
         <PlayRoomChatboxItem :name="mess.userName" :message="mess.text"
         :isMyMessage="userInfo.name === mess.userName" />
@@ -87,25 +87,33 @@ export default {
       }
     });
   },
+  updated() {
+    console.log('new message');
+    this.$refs.generalChat.scrollTop = this.$refs.generalChat.scrollHeight;
+  },
 };
 </script>
 
 <style lang="scss" scoped>
 @import '@/assets/styles/_base';
+@import '@/assets/styles/_mixin';
 
 .box-dark {
   // min-height: 28rem;
+  display: flex;
   box-sizing: border-box;
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
   flex-direction: column;
   justify-content: space-between;
+  transition: width 1.5s ease-in-out;
 }
 
 .chat-container {
   height: 25rem;
   overflow-y: auto;
   font-size: 0.9rem;
+  @include scrollbars()
 }
 
 .chatbox-input {

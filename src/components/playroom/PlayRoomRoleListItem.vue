@@ -90,7 +90,7 @@ img {
   opacity: 1;
   transition: opacity .5s;
 }
-.fade-enter, .fade-leave-to {
+.fade-enter-from, .fade-leave-to {
   opacity: 0;
 }
 

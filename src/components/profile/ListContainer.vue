@@ -6,6 +6,7 @@
 
 <style lang="scss" scoped>
 @import '@/assets/styles/_base';
+@import '@/assets/styles/_mixin';
 
 .list-container {
   position: relative;
@@ -14,18 +15,7 @@
   padding-top: 10px;
   overflow-y: auto;
   overflow-x: hidden;
-  &::-webkit-scrollbar {
-    width: 10px;
-  }
-  &::-webkit-scrollbar-track {
-    background: $dark;
-  }
-  &::-webkit-scrollbar-thumb {
-    background: $light;
-  }
-  &::-webkit-scrollbar-thumb:hover {
-    background: $white;
-  }
+  @include scrollbars();
 }
 
 </style>
