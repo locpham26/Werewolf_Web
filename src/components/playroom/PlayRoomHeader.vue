@@ -5,28 +5,29 @@
         <img @click="leave" src="@/assets/img/close.svg" />
       </button>
       <transition name="slide-skip">
-      <button
-        id="skip-button"
-        class="box-gray"
-        v-show="(myTurn || gameTurn === 'villager') && !skipped"
-        @click="skip">
-        Skip
-      </button>
+        <button
+          id="skip-button"
+          class="box-gray"
+          v-show="(myTurn || gameTurn === 'villager') && !skipped"
+          @click="skip"
+        >
+          Skip
+        </button>
       </transition>
     </div>
 
-    <div :style="{marginTop: !isGameStarted && 'auto'}" id="monitor">
+    <div :style="{ marginTop: !isGameStarted && 'auto' }" id="monitor">
       <div v-if="isGameStarted" class="fl-center">
         <div class="box-gray" v-show="showClock">{{ countdown }}s</div>
-        <p class="white-text" :style="!showNightMessage && {visibility: 'hidden'}">
+        <p class="white-text" :style="!showNightMessage && { visibility: 'hidden' }">
           {{ nightMessage }}
         </p>
       </div>
       <div v-if="isGameStarted && gameTurn !== ''" class="box-gray">
         <transition name="bounce" mode="out-in">
-        <p :key="displayedMessage">
-          {{displayedMessage}}
-        </p>
+          <p :key="displayedMessage">
+            {{ displayedMessage }}
+          </p>
         </transition>
       </div>
       <div v-if="!isGameStarted" class="box-gray d-fl">
@@ -46,27 +47,38 @@
     <div
       id="player"
       :style="[
-      isGameStarted
-      ? {visibility: 'visible', width: '18%'}
-      : {visibility: 'hidden', width: '18%'}]"
+        isGameStarted
+          ? { visibility: 'visible', width: '18%' }
+          : { visibility: 'hidden', width: '18%' }
+      ]"
     >
-      <div :class="{
+      <div
+        :class="{
           'my-turn-wolf': myTurn && userInfo.role === 'wolf',
           'my-turn-villager': myTurn && !['wolf', 'villager'].includes(userInfo.role),
           'box-gray': true
-        }">
-        <img class="avatar"
-        :src="isGameStarted ?
-        require('@/assets/img/' + userInfo.role + '.png') :
-        require('@/assets/img/villager.png')"/>
-        <transition name="bounce-name" appear>
-        <p :class="['my-role', {
-            'red-text': userInfo.role === 'wolf',
-            'white-text': myTurn && userInfo.role !== 'villager'}]"
-            :key="userInfo.role">
+        }"
+      >
+        <img
+          class="avatar"
+          :src="
+            isGameStarted
+              ? require('@/assets/img/' + userInfo.role + '.png')
+              : require('@/assets/img/villager.png')
+          "
+        />
+        <p
+          :class="[
+            'my-role',
+            {
+              'red-text': userInfo.role === 'wolf',
+              'white-text': myTurn && userInfo.role !== 'villager'
+            }
+          ]"
+          :key="userInfo.role"
+        >
           You're {{ userInfo.role }}
         </p>
-        </transition>
       </div>
     </div>
   </div>
@@ -83,7 +95,8 @@ export default {
       skipped: false,
       monitorMessage: {
         gameStart: {
-          generalMessage: 'The game has started. You have been assigned a role. The first night will come soon. Be prepared.',
+          generalMessage:
+            'The game has started. You have been assigned a role. The first night will come soon. Be prepared.',
         },
         villager: {
           roleMessage: 'Everyone!! Discuss with others and vote someone to be hanged.',
@@ -91,19 +104,20 @@ export default {
         },
         guard: {
           roleMessage: 'Wake up guard!! Choose anyone to protect from being killed',
-          generalMessage: 'It\'s guard\'s turn.',
+          generalMessage: "It's guard's turn.",
         },
         wolf: {
           roleMessage: 'Wake up wolves!! Discuss with other wolves and kill someone tonight.',
-          generalMessage: 'It\'s wolf\'s turn.',
+          generalMessage: "It's wolf's turn.",
         },
         seer: {
-          roleMessage: 'Wake up seer!! Check someone\'s role.',
-          generalMessage: 'It\'s seer\'s turn.',
+          roleMessage: "Wake up seer!! Check someone's role.",
+          generalMessage: "It's seer's turn.",
         },
         witch: {
-          roleMessage: 'Wake up witch!! Tonight, the wolves failed to kill anyone. You can poison someone.',
-          generalMessage: 'It\'s witch\'s turn.',
+          roleMessage:
+            'Wake up witch!! Tonight, the wolves failed to kill anyone. You can poison someone.',
+          generalMessage: "It's witch's turn.",
         },
         hunterDay: {
           roleMessage: 'Hunter!! Shoot someone before you die.',
@@ -140,7 +154,9 @@ export default {
   methods: {
     skip() {
       this.skipped = true;
-      this.$store.getters['socket/getUserSocket'].emit('skipTurn', { roomId: this.$route.params.id });
+      this.$store.getters['socket/getUserSocket'].emit('skipTurn', {
+        roomId: this.$route.params.id,
+      });
       if (this.gameTurn === 'villager' || this.gameTurn === 'wolf') {
         this.$store.getters['socket/getUserSocket'].emit('playerAction', {
           from: this.userInfo.name,
@@ -158,7 +174,10 @@ export default {
         : this.monitorMessage[this.gameTurn].generalMessage;
     },
     myTurn() {
-      return this.userInfo.role !== '' && (this.gameTurn.slice(0, this.userInfo.role.length) === this.userInfo.role);
+      return (
+        this.userInfo.role !== ''
+        && this.gameTurn.slice(0, this.userInfo.role.length) === this.userInfo.role
+      );
     },
     showClock() {
       return !['dayStart', 'dayEnd', 'gameStart', 'gameEnd'].includes(this.gameTurn);
@@ -184,7 +203,6 @@ export default {
       }
       return `${this.night}${suffix} Night`;
     },
-
   },
   watch: {
     gameTurn(value) {
@@ -210,9 +228,13 @@ export default {
     });
     this.$store.getters['socket/getUserSocket'].on('kill', ({ killedPlayer, poisonedPlayer }) => {
       if (killedPlayer !== '' && poisonedPlayer === '') {
-        this.monitorMessage.dayStart.generalMessage = (killedPlayer === this.userInfo.name) ? 'A new day has come. Last night, you were killed by the wolves.' : `${killedPlayer} was killed by the wolves.`;
+        this.monitorMessage.dayStart.generalMessage = killedPlayer === this.userInfo.name
+          ? 'A new day has come. Last night, you were killed by the wolves.'
+          : `${killedPlayer} was killed by the wolves.`;
       } else if (killedPlayer === '' && poisonedPlayer !== '') {
-        this.monitorMessage.dayStart.generalMessage = (poisonedPlayer === this.userInfo.name) ? 'A new day has come. Last night, you were poisoned by the witch.' : `${poisonedPlayer} was poisoned by the witch.`;
+        this.monitorMessage.dayStart.generalMessage = poisonedPlayer === this.userInfo.name
+          ? 'A new day has come. Last night, you were poisoned by the witch.'
+          : `${poisonedPlayer} was poisoned by the witch.`;
       } else if (killedPlayer !== '' && poisonedPlayer !== '') {
         if (poisonedPlayer === this.userInfo.name && killedPlayer === this.userInfo.name) {
           this.monitorMessage.dayStart.generalMessage = 'A new day has come. Last night, you were killed by the wolves and poisoned by the witch. Sorry!!';
@@ -236,9 +258,13 @@ export default {
     });
     this.$store.getters['socket/getUserSocket'].on('hunterShoot', (shotPlayer) => {
       if (this.gameTurn === 'hunterDay') {
-        this.monitorMessage.shootDay.generalMessage = (shotPlayer === this.userInfo.name) ? 'You were shot by the hunter.' : `${shotPlayer} was shot by the hunter.`;
+        this.monitorMessage.shootDay.generalMessage = shotPlayer === this.userInfo.name
+          ? 'You were shot by the hunter.'
+          : `${shotPlayer} was shot by the hunter.`;
       } else if (this.gameTurn === 'hunterNight') {
-        this.monitorMessage.shootNight.generalMessage = (shotPlayer === this.userInfo.name) ? 'You were shot by the hunter.' : `${shotPlayer} was shot by the hunter.`;
+        this.monitorMessage.shootNight.generalMessage = shotPlayer === this.userInfo.name
+          ? 'You were shot by the hunter.'
+          : `${shotPlayer} was shot by the hunter.`;
       }
     });
     this.$store.getters['socket/getUserSocket'].on('killedByWolf', (killedPlayer) => {
@@ -249,15 +275,17 @@ export default {
       }
     });
     this.$store.getters['socket/getUserSocket'].on('win', (winningSide) => {
-      this.monitorMessage.gameEnd.generalMessage = (winningSide === 'wolf') ? 'The game has ended. The wolves win.' : 'The game has ended. The villagers win.';
+      this.monitorMessage.gameEnd.generalMessage = winningSide === 'wolf'
+        ? 'The game has ended. The wolves win.'
+        : 'The game has ended. The villagers win.';
     });
   },
 };
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/styles/_base';
-@import '@/assets/styles/_mixin';
+@import "@/assets/styles/_base";
+@import "@/assets/styles/_mixin";
 
 #playroom-header {
   justify-content: space-between;
@@ -288,11 +316,13 @@ export default {
   @extend .box-white;
 }
 
-.slide-skip-enter-active, .slide-skip-leave-active {
+.slide-skip-enter-active,
+.slide-skip-leave-active {
   transition: all 0.5s ease;
 }
 
-.slide-skip-enter-from, .slide-skip-leave-to {
+.slide-skip-enter-from,
+.slide-skip-leave-to {
   opacity: 0;
   transform: translateX(-10px);
 }
@@ -357,7 +387,8 @@ p {
   text-align: center;
 }
 
-.red-text, #start-button:hover {
+.red-text,
+#start-button:hover {
   color: $red;
 }
 
@@ -380,34 +411,15 @@ p {
 }
 
 .bounce-enter-active {
-  animation: bounce-in 0.5s;
+  animation: bounce-fast 0.5s;
 }
 
-.bounce-name-enter-active {
-  animation: bounce-in 3.0s;
-}
-
-@keyframes bounce-in {
+@keyframes bounce-fast {
   0% {
     transform: scale(0);
   }
-  15% {
+  50% {
     transform: scale(1.5);
-  }
-  30% {
-    transform: scale(1);
-  }
-  45% {
-    transform: scale(1.5);
-  }
-  60% {
-    transform: scale(1);
-  }
-  75% {
-    transform: scale(1.5);
-  }
-  90% {
-    transform: scale(1.25);
   }
   100% {
     transform: scale(1);

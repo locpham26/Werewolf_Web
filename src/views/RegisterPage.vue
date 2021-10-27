@@ -18,14 +18,14 @@ export default {
   },
   data() {
     return {
-      hasVerified: false,
+      hasVerified: true,
     };
   },
 };
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/styles/_base';
+@import "@/assets/styles/_base";
 
 .register-page {
   @extend .fl-center;

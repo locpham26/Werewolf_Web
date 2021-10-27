@@ -1,4 +1,4 @@
 {
-  "apiUrl": "http://localhost:3001/api",
+  "apiUrl": "https://guarded-island-36458.herokuapp.com/api",
   "apiUrl2": "http://127.0.0.1:3000"
 }
