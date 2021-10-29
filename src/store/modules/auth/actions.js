@@ -1,10 +1,8 @@
 /* eslint-disable */
-import { apiUrl, apiUrl2 } from "../../service/config.json";
 import http from "../../service/httpService";
 
-const apiEndpoint = `${apiUrl}/auth`;
-const registerEndpoint = `${apiUrl}/user`;
-const apiEndpoint2 = `${apiUrl2}/auth/email/verify-email`;
+const apiEndpoint = `${process.env.VUE_APP_API_URL}/api/auth`;
+const registerEndpoint = `${process.env.VUE_APP_API_URL}/api/user`;
 
 export default {
   async login(context, payload) {
@@ -22,10 +20,4 @@ export default {
       password: payload.password
     });
   },
-  async sendRegisterEmail(context, payload) {
-    await http.post(apiEndpoint2, {
-      email: payload.email
-    });
-    context.commit("setEmail", { name: payload.name });
-  }
 };
